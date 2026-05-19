@@ -203,7 +203,7 @@ $ tar –xvf ThirdParty-v2412
 $ cd ~/Work/Github/ThirdParty-v2412
 ```
 
-https://qiita.com/yotakagi77/items/17006fd0dedef3acc573の情報に従って，gmp，mpfr, mpc, cmake, qtをダウンロードします．
+https://qiita.com/yotakagi77/items/17006fd0dedef3acc573 の情報に従って，gmp，mpfr, mpc, cmake, qtをダウンロードします．
 ```
 $ wget https://ftp.gnu.org/gnu/gmp/gmp-6.2.0.tar.xz
 $ tar –xvf gmp-6.2.0.tar.gz
