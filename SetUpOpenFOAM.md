@@ -1,4 +1,4 @@
-# OpenFOAMのセットアップ
+<img width="437" height="39" alt="image" src="https://github.com/user-attachments/assets/f090acc2-9fe0-48fe-80c0-3a3cd5de5691" /><img width="714" height="42" alt="image" src="https://github.com/user-attachments/assets/c019f5c2-f3db-4310-aff4-602be38b9a5e" /># OpenFOAMのセットアップ
 
 ## 準備
 - Ubuntu 18.04 LTS, 22.04 LTS, 24.04LTSで動作確認済みです．
@@ -180,4 +180,53 @@ export PATH=$HOME/local/bison-3.8.2/bin:$PATH
 terminalに戻って~/.bashrcを読み込みます．
 ```
 source ~/.bashrc
+```
+
+## OpenFOAMの準備
+- ESI版のv2412を使用します．
+https://www.openfoam.com/download/release-history
+からダウンロードできます．
+
+```
+$ cd ~/Work/Github
+$ wget https://dl.openfoam.com/source/v2412/OpenFOAM-v2412.tgz
+$ tar –xvf OpenFOAM-v2412
+$ wget https://dl.openfoam.com/source/v2412/ThirdParty-v2412.tgz
+$ tar –xvf ThirdParty-v2412
+```
+
+(参考：https://qiita.com/yotakagi77/items/17006fd0dedef3acc573)
+
+### OpenFOAM ThirdPartyのビルド
+まずOpenFOAM-v2412のビルドに必要なライブラリをThirdPartyを用いてビルドします．
+```
+$ cd ~/Work/Github/ThirdParty-v2412
+```
+
+https://qiita.com/yotakagi77/items/17006fd0dedef3acc573の情報に従って，gmp，mpfr, mpc, cmake, qtをダウンロードします．
+```
+$ wget https://ftp.gnu.org/gnu/gmp/gmp-6.2.0.tar.xz
+$ tar –xvf gmp-6.2.0.tar.gz
+$ wget https://ftp.gnu.org/gnu/mpfr/mpfr-4.0.2.tar.xz
+$ tar –xvf mpfr-4.0.2.tar.xz
+$ wget https://ftp.gnu.org/gnu/mpc/mpc-1.1.0.tar.gz
+$ tar –xvf mpc-1.1.0.tar.gz 
+$ wget https://download.qt.io/archive/qt/5.12/5.12.11/single/qt-everywhere-src-5.12.11.tar.xz
+$ tar -xvf qt-everywhere-src-5.12.11.tar.xz
+$ mv qt-everywhere-src-5.12.11 qt-everywhere-opensource-src-5.12.11 
+```
+
+../OpenFOAM-v2412/etc/config.sh/compilerを以下のように書き換えます．
+```
+61: default_clang_version=llvm-15.0.7
+62: default_gcc_version=gcc-10.5.0
+...
+64: default_gmp_version=gmp-6.2.0
+65: default_mpfr_version=mpfr-4.0.2
+66: default_mpc_version=mpc-1.1.0
+```
+
+OpenFOAMのbashrcを読み込みます．
+```
+$. ~/Work/Github/OpenFOAM-v2412/etc/bashrc
 ```
