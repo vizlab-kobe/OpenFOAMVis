@@ -333,3 +333,68 @@ terminalに戻って~/.bashrcを読み込みます．
 $ source ~/.bashrc
 ```
 
+# KVSのビルド
+## KVSの入手
+KVSを入手します．
+```
+$ cd ~/Work/GitHub
+$ git clone https://github.com/naohisAas/KVS.git
+```
+~/.bashrcに以下を追加します．
+```
+export KVS_DIR=$HOME/local/kvs
+export PATH=$KVS_DIR/bin:$PATH
+unset DISPLAY
+```
+
+## ビルドについての検討
+2つ作戦があります．
+1. EGLの使用
+   GPUが使用できる環境ならばEGLが使用可能です．
+2. OSMesaの使用
+   GPUが使用できない場合はOSMesaを使用することになります．
+これらは二者択一です．
+
+
+## KVS版のEGLのビルド
+OpenFOAMのIn-Situ可視化用途でEGL版KVSを使用する場合には，kvs.confを以下のように設定します：
+```
+KVS_ENABLE_OPENGL     = 1
+KVS_ENABLE_GLU        = 0
+KVS_ENABLE_GLEW       = 0
+KVS_ENABLE_OPENMP     = 1
+KVS_ENABLE_DEPRECATED = 0
+
+KVS_SUPPORT_CUDA      = 0
+KVS_SUPPORT_GLUT      = 0
+KVS_SUPPORT_GLFW      = 0
+KVS_SUPPORT_FFMPEG    = 0
+KVS_SUPPORT_OPENCV    = 0
+KVS_SUPPORT_QT        = 0
+KVS_SUPPORT_PYTHON    = 0
+KVS_SUPPORT_MPI       = 1
+KVS_SUPPORT_EGL       = 1
+KVS_SUPPORT_OSMESA    = 0
+```
+terminalにて以下のコマンドを実行します（管理者権限が必要です）：
+```
+$ sudo apt install libegl1-mesa-dev
+```
+/etc/glvnd/egl_vendor.d/10_nvidia.jsonに以下を記述します．ファイルがなければ作成します．こちらも管理者権限が必要です．
+```
+{
+    "file_format_version" : "1.0.0",
+    "ICD":{
+        "library_path": "libEGL_nvidia.so.0"
+    }
+}
+```
+その後ビルドをします．
+
+```
+$ cd ~/Work/GitHub/KVS
+$ make clean
+$ make
+$ make install
+```
+エラーが出なければビルド成功です．
