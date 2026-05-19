@@ -1,4 +1,4 @@
-# OpenFOAMのセットアップ
+<img width="743" height="88" alt="image" src="https://github.com/user-attachments/assets/5c7ce190-8910-4e12-b29e-7b1e33e2cce9" /># OpenFOAMのセットアップ
 
 ## 準備
 - Ubuntu 18.04 LTS, 22.04 LTS, 24.04LTSで動作確認済みです．
@@ -286,3 +286,50 @@ $ ./makeAdios2 -cmake $HOME/local/cmake-3.27.9/bin
 $ ./Allwmake
 ```
 を行って下さい．なお，Adiosは大規模並列計算向けのライブラリです．不要なら無視して下さい．
+
+ThirdPartyが問題なくビルドされたことを確認します．
+```
+$ foamSystemCheck
+```
+を実行し，
+```
+System check: PASS
+==================
+Can continue to OpenFOAM installation
+```
+と表示さればOKです．OpenFOAM本体のビルドに進みます．
+
+## OpenFOAM本体のビルド
+再度OpenFOAMのbashrcを読み込みます．
+```
+$cd ~/Work/Github/OpenFOAM-v2412
+$. ./etc/bashrc
+```
+ビルドを開始します．
+```
+$ ./Allwmake -j
+```
+長い時間が経過し，以下のようなメッセージを得るとビルドが完了です．
+```
+==============================================
+ OpenFOAM-v2412
+ Gcc system compiler
+ linux64GccDPInt640pt, with SYSTEMOPENMPI sys-openmpi
+
+ api = 2412
+ patch = 0
+ bin = 287 entries
+ lib = 154 entries
+
+==============================================
+```
+
+最後に~/.bashrcに以下を追加します
+```
+. $HOME/Work/Github/OpenFOAM-v2412/etc/bashrc
+```
+terminalに戻って~/.bashrcを読み込みます．
+```
+$ source ~/.bashrc
+```
+
