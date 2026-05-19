@@ -1,4 +1,4 @@
-<img width="743" height="88" alt="image" src="https://github.com/user-attachments/assets/5c7ce190-8910-4e12-b29e-7b1e33e2cce9" /># OpenFOAMのセットアップ
+# OpenFOAMのセットアップ
 
 ## 準備
 - Ubuntu 18.04 LTS, 22.04 LTS, 24.04LTSで動作確認済みです．
