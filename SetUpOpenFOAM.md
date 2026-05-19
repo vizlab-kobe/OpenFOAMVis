@@ -230,3 +230,59 @@ OpenFOAMのbashrcを読み込みます．
 ```
 $. ~/Work/Github/OpenFOAM-v2412/etc/bashrc
 ```
+### 必要なライブラリのビルド
+CGALのビルドを行います．CGALはsnappyhexMeshなど，解析をするためのメッシュ切りの際に必要です．
+可視化にはそれほど重要では有りませんので，必要がなければ飛ばしてOKです．
+まずgmpのビルドを行います．
+```
+$ cd ~/Work/Github/ThirdParty-v2412/gmp-6.2.0
+$ mkdir build
+$ cd build
+$ ../configure --prefix=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH/gmp-6.2.0 --enable-cxx --with-pic 
+$ make -j
+$ make install
+```
+
+次にmpfrのビルドを行います．先ほどビルドしたgmpを使用します．
+```
+$ cd ~/Work/Github/ThirdParty-v2412/mpfr-4.0.2
+$ mkdir build
+$ cd build
+$ ../configure --prefix=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH/mpfr-4.0.2 --with-gmp=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH/gmp-6.2.0 --with-pic 
+$ make -j
+$ make install
+```
+
+最後にCGALのビルドを行います．gmpとmpfrを用いてビルドをします．
+```
+$ cd ~/Work/Github/ThirdParty-v2412
+$ ./makeCGAL CGAL-4.14.3 gmp-6.2.0 mpfr-4.0.2
+```
+
+### Third Partyのビルド
+../OpenFOAM-v2412/etc/bashrcの以下の箇所を書き換えます．
+```
+106: export WM_MPLIB=SYSTEMOPENMPI
+...
+182: export WM_PROJECT_USER_DIR="$HOME/local/$WM_PROJECT/${USER:-user}-$WM_PROJECT_VERSION"
+```
+
+OpenFOAMのbashrcを読み込みます．
+```
+$ cd ~/Work/Github/ThirdParty-v2412
+$. ~/Work/Github/OpenFOAM-v2412/etc/bashrc
+```
+その後ビルドをします．
+```
+$ ./Allwmake
+```
+
+Addios関係でエラーが起きた場合は
+```
+$ ./makeAdios2 -cmake $HOME/local/cmake-3.27.9/bin
+```
+を実行したあと，再度
+```
+$ ./Allwmake
+```
+を行って下さい．なお，Adiosは大規模並列計算向けのライブラリです．不要なら無視して下さい．
