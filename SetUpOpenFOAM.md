@@ -1,4 +1,4 @@
-<img width="1880" height="88" alt="image" src="https://github.com/user-attachments/assets/d13fa67f-1e2d-48e4-b25c-eec4927087fb" /># OpenFOAMのセットアップ
+# OpenFOAMのセットアップ
 
 ## 準備
 - Ubuntu 18.04 LTS, 22.04 LTS, 24.04LTSで動作確認済みです．
@@ -20,7 +20,7 @@
 その後，OpenFOAM ThirdParty，およびOpenFOAM本体のビルドをします．
 
 ### gccの確認
-- gcc-10.5.0，およびgcc-11.4.0にて動作確認済みです．
+- gcc-7.5.0, gcc-10.5.0，およびgcc-11.4.0にて動作確認済みです．
 - Ubuntu 22.04 LTSにはgcc-11.4.0がプリセットされています．そのまま使用することができます．
 - Ubuntu 24.04 LTSにプリセットされているgcc 13では動作確認をしていません．11.4.0を導入して下さい．
 ```
@@ -529,3 +529,61 @@ $ make
 $ make install
 ```
 エラーが出なければビルド成功です．
+
+# InSituVisの準備
+InSituVisのライブラリを準備してビルドします．
+```
+$ cd ~/Work/Github
+$ git clone https://github.com/vizlab-kobe/InSituVis.git
+$ cd InSituVis/Lib
+$ python3 kvsmake.py
+```
+~/Work/Github/InSituVis/LibにlibInSituVis.aが生成されていればOKです．
+
+# OralAirFlowVis可視化
+OralAirFlowVisを入手します
+```
+$ cd ~/Work/Github
+$ git clone https://github.com/vizlab-kobe/OralAirFlowVis.git
+$ cd OralAirFlowVis
+```
+
+## ソルバーの改造
+OralAirFlowVisに含まれているrhoPimpleFoamはOpenFOAM 2.3.1に対応したものであり，そのままOpenFOAM v2412で使用することはできません．
+OpenFOAM v2412のソルバーを改造します．
+
+```
+$ cp –r $FOAM_SOLVERS/compressible/rhoPimpleFoam ./my_rhoPimpleFoam
+$ cd my_rhoPimpleFoam
+$ cp ../rhoPimpleFoam_InSituVis/InSituVis.h .
+```
+
+rhoPimpleFoam.CをOralAirFlowVis/rhoPimpleFoam_InSituVis/rhoPimpleFoam.Cを参考に改造します．
+
+まずヘッダー部分は
+```
+#include "fvCFD.H"
+#include "dynamicFvMesh.H"
+#include "fluidThermo.H"
+#include "turbulentFluidThermoModel.H"
+#include "bound.H"
+#include "pimpleControl.H"
+#include "pressureControl.H"
+#include "CorrectPhi.H"
+#include "fvOptions.H"
+#include "localEulerDdtScheme.H"
+#include "fvcSmooth.H"
+
+// In-situ visualization
+#define IN_SITU_VIS
+#if defined( IN_SITU_VIS )
+#include "InSituVis.h"
+#include <InSituVis/Lib.foam/FoamToKVS.h>
+
+// IN_SITU_VIS__P: Pressure
+// IN_SITU_VIS__U: Velocity
+// IN_SITU_VIS__T: Temperature
+#define IN_SITU_VIS__P
+#endif
+```
+を追記します．
