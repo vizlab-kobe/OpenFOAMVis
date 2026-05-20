@@ -26,7 +26,7 @@
 - gcc-7.5.0, gcc-10.5.0，およびgcc-11.4.0にて動作確認済みです．
 - Ubuntu 22.04 LTSにはgcc-11.4.0がプリセットされています．そのまま使用することができます．
 - Ubuntu 24.04 LTSにプリセットされているgcc 13では動作確認をしていません．11.4.0を導入して下さい．
-```
+```console
 $ gcc --version
 gcc (Ubuntu 11.4.0-1ubuntu1~22.04.3) ll.4.0
 ...
@@ -34,7 +34,7 @@ gcc (Ubuntu 11.4.0-1ubuntu1~22.04.3) ll.4.0
 
 ### cmakeのビルド
 llvm，およびOpenFOAMをビルドするのに必要です．3.27.9で動作確認済みです．
-```
+```console
 $ cd ~/Work/Github
 $ wget https://github.com/Kitware/CMake/releases/download/v3.27.9/cmake-3.27.9.tar.gz
 $ tar –xvf cmake-3.27.9.tar.gz
@@ -46,13 +46,13 @@ $ make –j
 $ make install
 ```
 
-make installまで終了後，~/.bashrcにパスを記述する必要があります．
-以下の内容を~/.bashrcの末尾に記述しておきます．
-```
+make installまで終了後，`~/.bashrc`にパスを記述する必要があります．
+以下の内容を`~/.bashrc`の末尾に記述しておきます．
+```bash
 export PATH=$HOME/local/cmake-3.27.9/bin:$PATH
 ```
 
-terminalに戻って~/.bashrcを読み込みます．
+terminalに戻って`~/.bashrc`を読み込みます．
 ```
 $ source ~/.bashrc
 ```
