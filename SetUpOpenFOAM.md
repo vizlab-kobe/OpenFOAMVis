@@ -1,4 +1,4 @@
-# OpenFOAMのセットアップ
+<img width="1663" height="138" alt="image" src="https://github.com/user-attachments/assets/9d90a0bb-50ec-4723-ba68-58dbc982ae16" /># OpenFOAMのセットアップ
 
 ## 準備
 - Ubuntu 18.04 LTS, 22.04 LTS, 24.04LTSで動作確認済みです．
@@ -43,13 +43,13 @@ $ make –j
 $ make install
 ```
 
-make installまで終了後，~/.bashrcにパスを記述する必要があります．
-以下の内容を~/.bashrcの末尾に記述しておきます．
+make installまで終了後，'~/.bashrc'にパスを記述する必要があります．
+以下の内容を'~/.bashrc'の末尾に記述しておきます．
 ```
 export PATH=$HOME/local/cmake-3.27.9/bin:$PATH
 ```
 
-terminalに戻って~/.bashrcを読み込みます．
+terminalに戻って'~/.bashrc'を読み込みます．
 ```
 $ source ~/.bashrc
 ```
@@ -69,7 +69,7 @@ $ make –j
 $ make install
 ```
 
-成功後，~/.bashrcに以下を追加します．コンパイラ (gcc/g++)がzlibを見つけられるようにします．
+成功後，'~/.bashrc'に以下を追加します．コンパイラ (gcc/g++)がzlibを見つけられるようにします．
 ```
 export ZLIB_DIR=$HOME/local/zlib-1.3.1
 export CPATH=$ZLIB_DIR/include:$CPATH
@@ -77,7 +77,7 @@ export LIBRARY_PATH=$ZLIB_DIR/lib:$LIBRARY_PATH
 export LD_LIBRARY_PATH=$ZLIB_DIR/lib:$LD_LIBRARY_PATH
 ```
 
-terminalに戻って~/.bashrcを読み込みます．
+terminalに戻って'~/.bashrc'を読み込みます．
 ```
 source ~/.bashrc
 ```
@@ -96,7 +96,7 @@ $ make –j
 $ make install
 ```
 
-成功後，~/.bashrcに以下を追加します．コンパイラ (gcc/g++)がzlibを見つけられるようにします．
+成功後，'~/.bashrc'に以下を追加します．コンパイラ (gcc/g++)がzlibを見つけられるようにします．
 ```
 export ZLIB_DIR=$HOME/local/zlib-1.3.1
 export CPATH=$ZLIB_DIR/include:$CPATH
@@ -104,7 +104,7 @@ export LIBRARY_PATH=$ZLIB_DIR/lib:$LIBRARY_PATH
 export LD_LIBRARY_PATH=$ZLIB_DIR/lib:$LD_LIBRARY_PATH
 ```
 
-terminalに戻って~/.bashrcを読み込みます．
+terminalに戻って'~/.bashrc'を読み込みます．
 ```
 source ~/.bashrc
 ```
@@ -123,7 +123,7 @@ $ make –j
 $ make install
 ```
 
-成功後，~/.bashrcに以下を追加します．コンパイラ (gcc/g++)がflexを見つけられるようにします．
+成功後，'~/.bashrc'に以下を追加します．コンパイラ (gcc/g++)がflexを見つけられるようにします．
 ```
 export PATH=$HOME/local/flex-2.6.4/bin:$PATH
 export CPATH=$HOME/local/flex-2.6.4/include:$CPATH
@@ -388,7 +388,7 @@ terminalにて以下のコマンドを実行します（管理者権限が必要
 ```
 $ sudo apt install libegl1-mesa-dev
 ```
-/etc/glvnd/egl_vendor.d/10_nvidia.jsonに以下を記述します．ファイルがなければ作成します．こちらも管理者権限が必要です．
+'/etc/glvnd/egl_vendor.d/10_nvidia.json'に以下を記述します．ファイルがなければ作成します．こちらも管理者権限が必要です．
 ```
 {
     "file_format_version" : "1.0.0",
@@ -560,7 +560,9 @@ $ cp ../rhoPimpleFoam_InSituVis/InSituVis.h .
 
 rhoPimpleFoam.CをOralAirFlowVis/rhoPimpleFoam_InSituVis/rhoPimpleFoam.Cを参考に改造します．
 
-まずヘッダー部分は
+追記は計5箇所です．
+
+1つ目．ヘッダー部分は
 ```
 #include "fvCFD.H"
 #include "dynamicFvMesh.H"
@@ -586,4 +588,254 @@ rhoPimpleFoam.CをOralAirFlowVis/rhoPimpleFoam_InSituVis/rhoPimpleFoam.Cを参�
 #define IN_SITU_VIS__P
 #endif
 ```
+とします．#define IN_SITU_VISから#endifまでが追記内容です．今回は圧力Pの可視化を試みます．
+
+2つ目．main関数内部にて
+```
+    turbulence->validate();
+
+    if (!LTS)
+    {
+        #include "compressibleCourantNo.H"
+        #include "setInitialDeltaT.H"
+    }
+
+#if defined( IN_SITU_VIS )
+    // In-situ visualization setup
+    Foam::messageStream::level = 0; // Disable Foam::Info
+    const kvs::Indent indent(4); // indent for log stream
+    local::InSituVis vis( MPI_COMM_WORLD );
+    if ( !vis.initialize() )
+      {
+        vis.log() << "ERROR: " << "Cannot initialize visualization process." << std::endl;
+        vis.world().abort();
+      }
+
+    // Time-loop information
+    const auto start_time = runTime.startTime().value();
+    const auto start_time_index = runTime.startTimeIndex();
+    const auto end_time = runTime.endTime().value();
+    const auto end_time_index = static_cast<int>( end_time / runTime.deltaT().value() );
+    vis.log() << std::endl;
+    vis.log() << "STARTING TIME LOOP" << std::endl;
+    vis.log() << indent << "Start time and index: " << start_time << ", " << start_time_index << std::endl;
+    vis.log() << indent << "End time and index: " << end_time << ", " << end_time_index << std::endl;
+    vis.log() << std::endl;
+#endif // IN_SITU_VIS
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+    Info<< "\nStarting time loop\n" << endl;
+```
 を追記します．
+
+3つ目．時間発展のwhile文の手前です．
+```
+        if (LTS)
+        {
+            #include "setRDeltaT.H"
+        }
+        else
+        {
+            #include "compressibleCourantNo.H"
+            #include "setDeltaT.H"
+        }
+
+        ++runTime;
+
+#if defined( IN_SITU_VIS )
+        // Loop information
+        const auto current_time_value = runTime.value();
+        const auto current_time_index = runTime.timeIndex();
+        vis.log() << "LOOP[" << current_time_index << "/" << end_time_index << "]: " << std::endl;
+        vis.log() << indent << "T: " << current_time_value << std::endl;
+        vis.log() << indent << "End T: " << end_time << std::endl;
+        vis.log() << indent << "Delta T: " << runTime.deltaT().value() << std::endl;
+        vis.simTimer().start();
+#endif // IN_SITU_VIS
+
+        Info<< "Time = " << runTime.timeName() << nl << endl;
+
+        // --- Pressure-velocity PIMPLE corrector loop
+        while (pimple.loop())
+        {
+```
+
+4つ目．時間発展のwhile文の内部です．最も重要な部分です．各格子ごとにvis.putで可視化パイプラインに引き渡し，具体的な可視化を行います．
+```
+        rho = thermo.rho();
+
+        runTime.write();
+
+#if defined( IN_SITU_VIS )
+        vis.simTimer().stamp();
+        const auto ts = vis.simTimer().last();
+        const auto Ts = kvs::String::From( ts, 4 );
+        vis.log() << indent << "Processing Times:" << std::endl;
+        vis.log() << indent.nextIndent() << "Simulation: " << Ts << " s" << std::endl;
+
+        // Execute in-situ visualization process
+#if defined( IN_SITU_VIS__P ) // p: pressure
+        auto& field = p;
+        // A (whole min/max values)
+        //const auto min_value = 97928.796875;
+        //const auto max_value = 106227.53906;
+        //const auto min_value = 0.99998 * 100000.0;
+        //const auto max_value = 1.02000 * 100000.0;
+        // B
+        //const auto min_value = 9.94 * 10000.0;
+        //const auto max_value = 1.02 * 100000.0;
+        // C
+        //const auto min_value = 0.999999 * 100000.0;
+        //const auto max_value = 1.000020 * 100000.0;
+        const auto min_value = 0.999990 * 100000.0;
+        const auto max_value = 1.000200 * 100000.0;
+#elif defined( IN_SITU_VIS__U ) // U: velocity
+        auto& field = U;
+        // A (whole min/max values)
+        const auto min_value = 0.0;
+        const auto max_value = 71.645393372;
+        //const auto min_value = 0.0224;
+        //const auto max_value = 70.9;
+#elif defined( IN_SITU_VIS__T ) // T: temperature
+        auto& field = thermo.T();
+        // A (whole min/max values)
+        const auto min_value = 289.91583252;
+        const auto max_value = 296.15917969;
+        //const auto min_value = 290.0;
+        //const auto max_value = 296.16;
+#endif
+
+        // Convert OpenFOAM data to KVS data
+        vis.cnvTimer().start();
+        InSituVis::foam::FoamToKVS converter( field );
+        using CellType = InSituVis::foam::FoamToKVS::CellType;
+        auto vol_tet = converter.exec( vis.world(), field, CellType::Tetrahedra );
+        auto vol_hex = converter.exec( vis.world(), field, CellType::Hexahedra );
+        auto vol_pri = converter.exec( vis.world(), field, CellType::Prism );
+        auto vol_pyr = converter.exec( vis.world(), field, CellType::Pyramid );
+        vis.cnvTimer().stamp();
+
+        vol_tet.setName("Tet");
+        vol_hex.setName("Hex");
+        vol_pri.setName("Pri");
+        vol_pyr.setName("Pyr");
+
+        vol_tet.setMinMaxValues( min_value, max_value );
+        vol_hex.setMinMaxValues( min_value, max_value );
+        vol_pri.setMinMaxValues( min_value, max_value );
+        vol_pyr.setMinMaxValues( min_value, max_value );
+
+        const auto tc = vis.cnvTimer().last();
+        const auto Tc = kvs::String::From( tc, 4 );
+        vis.log() << indent.nextIndent() << "Conversion: " << Tc << " s" << std::endl;
+
+        // Execute visualization pipeline and rendering
+        vis.visTimer().start();
+        vis.put( vol_tet );
+        vis.put( vol_hex );
+        vis.put( vol_pri );
+        vis.put( vol_pyr );
+        vis.exec( { current_time_value, current_time_index } );
+        vis.visTimer().stamp();
+
+        const auto tv = vis.visTimer().last();
+        const auto Tv = kvs::String::From( tv, 4 );
+        vis.log() << indent.nextIndent() << "Visualization: " << Tv << " s" << std::endl;
+
+        const auto elapsed_time = runTime.elapsedCpuTime();
+        vis.log() << indent << "Elapsed Time: " << elapsed_time << " s" << std::endl;
+        vis.log() << std::endl;
+#endif // IN_SITU_VIS
+
+        runTime.printExecutionTime(Info);
+    }
+```
+
+5つ目．解析終了後に出力するログです．
+```
+        runTime.printExecutionTime(Info);
+    }
+
+#if defined( IN_SITU_VIS )
+    if ( !vis.finalize() )
+    {
+        vis.log() << "ERROR: " << "Cannot finalize visualization process." << std::endl;
+        vis.world().abort();
+    }
+#endif // IN_SITU_VIS
+
+    Info<< "End\n" << endl;
+
+    return 0;
+}
+```
+## ソルバーのコンパイルの設定
+### Make/filesの編集
+Make/filesを以下の通り編集します
+```
+rhoPimpleFoam.C
+
+EXE = rhoPimpleFoam
+```
+
+なお，ここで改造したソルバーをOralAirFlow以外の別の解析で使用したい場合には
+```
+rhoPimpleFoam.C
+
+EXE = $(FOAM_USER_APPBIN)/my_PimpleFoam
+```
+とします．上記の設定をすれば，'my_PimpleFoam'というコマンドがローカル環境に登録されます．
+
+### Make/optionsの編集（EGL版）
+EGL版のKVSを使用する場合には以下の通り編集して下さい．
+```
+EXE_INC = \
+    -I$(LIB_SRC)/finiteVolume/cfdTools \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude \
+    -I$(LIB_SRC)/dynamicMesh/lnInclude \
+    -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
+    -I$(LIB_SRC)/sampling/lnInclude \
+    -I$(LIB_SRC)/transportModels/compressible/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
+    -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
+    -I$(LIB_SRC)/TurbulenceModels/compressible/lnInclude \
+    -I$(LIB_SRC)/regionFaModels/lnInclude \
+    -I$(HOME)/local/openmpi-4.1.2/include \
+
+EXE_LIBS = \
+    -lfiniteVolume \
+    -lfvOptions \
+    -lmeshTools \
+    -lcompressibleTransportModels \
+    -lfluidThermophysicalModels \
+    -lspecie \
+    -lturbulenceModels \
+    -lcompressibleTurbulenceModels \
+    -lthermoTools \
+    -ldynamicMesh \
+    -ldynamicFvMesh \
+    -ltopoChangerFvMesh \
+    -lsampling \
+    -latmosphericModels \
+    -lregionFaModels \
+    -lfiniteArea
+
+/* KVS settings (EGL / GPU Mode) */
+EXE_INC += \
+    -I${KVS_DIR}/include -DKVS_SUPPORT_MPI -DKVS_USE_MPI \
+    -DKVS_SUPPORT_EGL -DEGL_NO_X11 -DMESA_EGL_NO_X11_HEADERS
+
+EXE_LIBS += \
+    -L${KVS_DIR}/lib -lkvsSupportMPI \
+    -lkvsSupportEGL -lkvsCore \
+    -lEGL -lGL
+
+/* InSitu settings */
+EXE_INC += -I$(HOME)/Work/Github
+EXE_LIBS += -L$(HOME)/Work/Github/InSituVis/Lib -lInSituVis
+
+/* OpenMP settings */
+EXE_INC += -fopenmp
+EXE_LIBS += -fopenmp
+```
