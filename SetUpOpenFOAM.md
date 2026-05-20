@@ -26,7 +26,7 @@
 - gcc-7.5.0, gcc-10.5.0，およびgcc-11.4.0にて動作確認済みです．
 - Ubuntu 22.04 LTSにはgcc-11.4.0がプリセットされています．そのまま使用することができます．
 - Ubuntu 24.04 LTSにプリセットされているgcc 13では動作確認をしていません．11.4.0を導入して下さい．
-```console
+``` 
 $ gcc --version
 gcc (Ubuntu 11.4.0-1ubuntu1~22.04.3) ll.4.0
 ...
@@ -34,7 +34,7 @@ gcc (Ubuntu 11.4.0-1ubuntu1~22.04.3) ll.4.0
 
 ### cmakeのビルド
 llvm，およびOpenFOAMをビルドするのに必要です．3.27.9で動作確認済みです．
-```console
+``` 
 $ cd ~/Work/Github
 $ wget https://github.com/Kitware/CMake/releases/download/v3.27.9/cmake-3.27.9.tar.gz
 $ tar –xvf cmake-3.27.9.tar.gz
@@ -53,14 +53,14 @@ export PATH=$HOME/local/cmake-3.27.9/bin:$PATH
 ```
 
 terminalに戻って`~/.bashrc`を読み込みます．
-```console
+``` 
 $ source ~/.bashrc
 ```
 
 ### openmpiのビルド
 並列計算に必要です．OpenFOAMのビルド前にインストールしておく必要があります．
 4.1.2で動作確認済みです．terminalで以下のコマンドを入力します．
-```console
+``` 
 $ cd ~/Work/Github
 $ wget https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.2.tar.gz
 $ tar -xvf openmpi-4.1.2.tar.gz 
@@ -87,7 +87,7 @@ source ~/.bashrc
 
 ### zlibのビルド
 zlibをビルドします．zlibはOpenFOAM形式の圧縮ファイルの処理に必要です．
-```console
+``` 
 $ cd ~/Work/Github/
 $ wget https://github.com/madler/zlib/releases/download/v1.3.1/zlib-1.3.1.tar.gz
 $ tar –xvf zlib-1.3.1.tar.gz
@@ -108,13 +108,13 @@ export LD_LIBRARY_PATH=$ZLIB_DIR/lib:$LD_LIBRARY_PATH
 ```
 
 terminalに戻って`~/.bashrc`を読み込みます．
-```console
+``` 
 source ~/.bashrc
 ```
 
 ### flexのビルド
 flexをビルドします．flexはOpenFOAMの設定ファイルを読み込むためのライブラリです．
-```console
+``` 
 $ cd ~/Work/Github 
 $ wget https://github.com/westes/flex/releases/download/v2.6.4/flex-2.6.4.tar.gz 
 $ tar -xvf flex-2.6.4.tar.gz 
@@ -133,13 +133,13 @@ export CPATH=$HOME/local/flex-2.6.4/include:$CPATH
 ```
 
 terminalに戻って`~/.bashrc`を読み込みます．
-```console
+``` 
 source ~/.bashrc
 ```
 
 ### m4のビルド
 OpenFOAM ThirdPartyであるgmpのビルドに必要です．1.4.18, 19で動作確認済みです．Ubuntu 22.04 LTS等の新しい環境では1.4.18以下のバージョンはコンパイル時にエラーが発生するようです．その場合には1.4.19以上のバージョンを使って下さい．terminalで以下のコマンドを入力します．
-```console
+``` 
 $ cd ~/Work/Github
 $ wget https://ftp.gnu.org/gnu/m4/m4-1.4.19.tar.gz
 $ tar –xvf m4-1.4.19.tar.gz
@@ -157,13 +157,13 @@ export PATH=$HOME/local/m4-1.4.19/bin:$PATH
 ```
 
 terminalに戻って`~/.bashrc`を読み込みます．
-```console
+``` 
 source ~/.bashrc
 ```
 
 ### bisonのビルド
 bisonをビルドします．bisonは数式をC++ (OpenFOAM) 向けに読み取るライブラリです．
-```console
+``` 
 $ cd ~/Work/Github 
 $ wget https://ftp.gnu.org/gnu/bison/bison-3.8.2.tar.gz 
 $ tar -xvf bison-3.8.2.tar.gz
@@ -190,7 +190,7 @@ source ~/.bashrc
 https://www.openfoam.com/download/release-history
 からダウンロードできます．
 
-```console
+``` 
 $ cd ~/Work/Github
 $ wget https://dl.openfoam.com/source/v2412/OpenFOAM-v2412.tgz
 $ tar –xvf OpenFOAM-v2412
@@ -202,12 +202,12 @@ $ tar –xvf ThirdParty-v2412
 
 ### OpenFOAM ThirdPartyのビルド
 まずOpenFOAM-v2412のビルドに必要なライブラリをThirdPartyを用いてビルドします．
-```console
+``` 
 $ cd ~/Work/Github/ThirdParty-v2412
 ```
 
 gmp，mpfr, mpc, cmake, qtをダウンロードします．
-```console
+``` 
 $ wget https://ftp.gnu.org/gnu/gmp/gmp-6.2.0.tar.xz
 $ tar –xvf gmp-6.2.0.tar.gz
 $ wget https://ftp.gnu.org/gnu/mpfr/mpfr-4.0.2.tar.xz
@@ -230,14 +230,14 @@ $ mv qt-everywhere-src-5.12.11 qt-everywhere-opensource-src-5.12.11
 ```
 
 OpenFOAMの`bashrc`を読み込みます．
-```console
+``` 
 $. ~/Work/Github/OpenFOAM-v2412/etc/bashrc
 ```
 ### 必要なライブラリのビルド
 CGALのビルドを行います．CGALはsnappyhexMeshなど，解析をするためのメッシュ切りの際に必要です．
 可視化にはそれほど重要では有りませんので，必要がなければ飛ばしてOKです．
 まずgmpのビルドを行います．
-```console
+``` 
 $ cd ~/Work/Github/ThirdParty-v2412/gmp-6.2.0
 $ mkdir build
 $ cd build
@@ -247,7 +247,7 @@ $ make install
 ```
 
 次にmpfrのビルドを行います．先ほどビルドしたgmpを使用します．
-```console
+``` 
 $ cd ~/Work/Github/ThirdParty-v2412/mpfr-4.0.2
 $ mkdir build
 $ cd build
@@ -257,7 +257,7 @@ $ make install
 ```
 
 最後にCGALのビルドを行います．gmpとmpfrを用いてビルドをします．
-```console
+``` 
 $ cd ~/Work/Github/ThirdParty-v2412
 $ ./makeCGAL CGAL-4.14.3 gmp-6.2.0 mpfr-4.0.2
 ```
@@ -271,31 +271,31 @@ $ ./makeCGAL CGAL-4.14.3 gmp-6.2.0 mpfr-4.0.2
 ```
 
 OpenFOAMの`bashrc`を読み込みます．
-```console
+``` 
 $ cd ~/Work/Github/ThirdParty-v2412
 $. ~/Work/Github/OpenFOAM-v2412/etc/bashrc
 ```
 その後ビルドをします．
-```console
+``` 
 $ ./Allwmake
 ```
 
 Addios関係でエラーが起きた場合は
-```console
+``` 
 $ ./makeAdios2 -cmake $HOME/local/cmake-3.27.9/bin
 ```
 を実行したあと，再度
-```console
+``` 
 $ ./Allwmake
 ```
 を行って下さい．なお，Adiosは大規模並列計算向けのライブラリです．不要なら無視して下さい．
 
 ThirdPartyが問題なくビルドされたことを確認します．
-```console
+``` 
 $ foamSystemCheck
 ```
 を実行し，
-```console
+``` 
 System check: PASS
 ==================
 Can continue to OpenFOAM installation
@@ -304,16 +304,16 @@ Can continue to OpenFOAM installation
 
 ## OpenFOAM本体のビルド
 再度OpenFOAMのbashrcを読み込みます．
-```console
+``` 
 $ cd ~/Work/Github/OpenFOAM-v2412
 $ . ./etc/bashrc
 ```
 ビルドを開始します．
-```console
+``` 
 $ ./Allwmake -j
 ```
 長い時間が経過し，以下のようなメッセージを得るとビルドが完了です．
-```console
+``` 
 ==============================================
  OpenFOAM-v2412
  Gcc system compiler
@@ -332,14 +332,14 @@ $ ./Allwmake -j
 . $HOME/Work/Github/OpenFOAM-v2412/etc/bashrc
 ```
 terminalに戻って~/.bashrcを読み込みます．
-```console
+``` 
 $ source ~/.bashrc
 ```
 
 # KVSのビルド
 ## KVSの入手
 KVSを入手します．
-```console
+``` 
 $ cd ~/Work/GitHub
 $ git clone https://github.com/naohisAas/KVS.git
 ```
@@ -365,7 +365,7 @@ unset DISPLAY
 
 ## EGL版のKVSのビルド
 KVSディレクトリに移動します．
-```console
+``` 
 cd ~/Work/GitHub/KVS
 ```
 OpenFOAMのIn-Situ可視化用途でEGL版KVSを使用する場合には，`kvs.conf`を以下のように設定します：
@@ -388,7 +388,7 @@ KVS_SUPPORT_EGL       = 1
 KVS_SUPPORT_OSMESA    = 0
 ```
 terminalにて以下のコマンドを実行します（管理者権限が必要です）：
-```console
+``` 
 $ sudo apt install libegl1-mesa-dev
 ```
 `/etc/glvnd/egl_vendor.d/10_nvidia.json`に以下を記述します．ファイルがなければ作成します．こちらも管理者権限が必要です．
@@ -401,7 +401,7 @@ $ sudo apt install libegl1-mesa-dev
 }
 ```
 その後ビルドをします．
-```console
+``` 
 $ make clean
 $ make
 $ make install
@@ -412,7 +412,7 @@ $ make install
 
 ### ninjaの準備
 llvmをビルドするのに必要です．terminalで以下の通り入力します．最終的にcmakeのライブラリに格納します．
-```console
+``` 
 $ cd ~/Work/Github
 $ git clone https://github.com/ninja-build/ninja.git
 $ cd ninja
@@ -423,14 +423,14 @@ $ cp ninja $HOME/local/cmake-3.27.9/bin
 ### llvmのビルド
 OSMesaを使用する際に，llvmpipeを使って高速可視化を実現します．15.0.7で動作確認済みです．
 terminalで以下のコマンドを入力します．
-```console
+``` 
 $ cd ~/Work/Github
 $ git clone https://github.com/llvm/llvm-project.git
 $ cd llvm-project
 $ git checkout llvmorg-15.0.7
 ```
 さらに
-```console
+``` 
 $ cmake -G Ninja -DCMAKE_INSTALL_PREFIX=$HOME/local/llvm-15.0.7 \  
 -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_RTTI=ON \  
 -DLLVM_BUILD_LLVM_DYLIB=ON -DLLVM_LINK_LLVM_DYLIB=ON \  
@@ -438,13 +438,13 @@ $ cmake -G Ninja -DCMAKE_INSTALL_PREFIX=$HOME/local/llvm-15.0.7 \
 ../llvm
 ```
 を実行します．なお`-DLLVM_TARGETS_TO_BUILD="X86"`の部分については，各自の環境に合わせた設定が必要です．terminalで
-```console
+``` 
 uname -m
 ```
 のコマンドで確認して下さい．
 
 cmakeが無事に終了した後
-```console
+``` 
 $ ninja -j
 $ ninja install
 ```
@@ -455,13 +455,13 @@ export PATH=$LLVM_PATH/bin:$PATH
 export LD_LIBRARY_PATH=$LLVM_PATH/lib:$LD_LIBRARY_PATH
 ```
 terminalに戻り`~/.bashrc`を読み込みます．
-```console
+``` 
 $ source ~/.bashrc
 ```
 
 ### OSMesaのビルド
 OSMesa 22.3.7で動作確認済みです．これをビルドするためにはmeson, ninja, makoが必要です．
-```console
+``` 
 $ pip3 install –user meson ninja mako
 ```
 これらのライブラリが`$HOME/.local`に入るので，`~/.bashrc`にパスを通します．
@@ -469,14 +469,14 @@ $ pip3 install –user meson ninja mako
 export PATH=$HOME/.local/bin:$PATH
 ```
 再びterminalでOSMesaを取得します．
-```console
+``` 
 $ cd ~/Work/Github
 $ wget https://archive.mesa3d.org/older-versions/22.x/mesa-22.3.7.tar.xz
 $ tar –xvf mesa-22.3.7.tar.xz
 $ cd mesa-22.3.7
 ```
 以下のコマンドでビルドします．
-```console
+``` 
 $ meson setup build \
   --prefix=$HOME/local/osmesa_22.3.7 \
   --buildtype=release \
@@ -503,7 +503,7 @@ export LD_LIBRARY_PATH=$HOME/local/osmesa_22.3.7/lib/x86_64-linux-gnu:$LD_LIBRAR
 ```
 ### OSMesa版のKVSのビルド
 KVSディレクトリに移動します．
-```console
+``` 
 cd ~/Work/GitHub/KVS
 ```
 `kvs.conf`を以下のように編集します：
@@ -526,7 +526,7 @@ KVS_SUPPORT_EGL       = 0
 KVS_SUPPORT_OSMESA    = 1
 ```
 その後以下のようにビルドします．
-```console
+``` 
 $ make clean
 $ make
 $ make install
@@ -535,7 +535,7 @@ $ make install
 
 # InSituVisの準備
 InSituVisのライブラリを準備してビルドします．
-```console
+``` 
 $ cd ~/Work/Github
 $ git clone https://github.com/vizlab-kobe/InSituVis.git
 $ cd InSituVis/Lib
@@ -545,17 +545,18 @@ $ python3 kvsmake.py
 
 # OralAirFlowVis可視化
 OralAirFlowVisを入手します
-```console
+``` 
 $ cd ~/Work/Github
 $ git clone https://github.com/vizlab-kobe/OralAirFlowVis.git
 $ cd OralAirFlowVis
 ```
+今回はOralAirFlowVisに含まれる解析realistic-s3について，圧力pの等値面を可視化します．
 
 ## ソルバーの改造
 OralAirFlowVisに含まれているrhoPimpleFoamはOpenFOAM 2.3.1に対応したものであり，そのままOpenFOAM v2412で使用することはできません．
 OpenFOAM v2412のソルバーを改造します．
 
-```console
+``` 
 $ cp –r $FOAM_SOLVERS/compressible/rhoPimpleFoam ./my_rhoPimpleFoam
 $ cd my_rhoPimpleFoam
 $ cp ../rhoPimpleFoam_InSituVis/InSituVis.h .
@@ -855,14 +856,14 @@ EXE_LIBS += -fopenmp
 
 ### ビルドの実行
 terminalで
-```console
+``` 
 $ wclean && wmake
 ```
 でビルドします．エラーが出なければ成功です．
 
 ## OralAirFlowVisの可視化
 可視化をします．ここでは例としてOralAirFlowVisに含まれるrealistic-s3を使用します．
-```console
+``` 
 $ cd ~/Work/GitHub/OralAirFlowVis/realistic-s3
 ```
 
@@ -882,14 +883,14 @@ constant/turbulencePropertiesを以下の通り改造します．乱流モデル
 }
 ```
 次に初期条件の設定ファイル名を変更します．
-```console
+``` 
 $ rm -r processer*
 $ mv 0/alphaSgs 0/alphat
 $ mv 0/muSgs 0/nut
 ```
 `./0/nut`を編集します．
 
-```cpp diff
+```diff
 FoamFile
 {
     version     2.0;
@@ -905,38 +906,10 @@ FoamFile
 
 internalField   uniform 0;
 
-boundaryField
-{
-    inlet
-    {
-        type            zeroGradient;
-    }
-
-    outlet
-    {
-        type            zeroGradient;
-    }
-
-    walls
-    {
-        type            zeroGradient;
-    }
-}
-
 ```
 
 `./system/fvSchemes`を以下のとおり編集します．
-```cpp diff
-ddtSchemes
-{
-    default         CrankNicolson 1;
-}
-
-gradSchemes
-{
-    default         Gauss linear;
-}
-
+```diff
 divSchemes
 {
     default         none;
@@ -953,26 +926,26 @@ divSchemes
     div(((rho*U)*U))   Gauss linear;
 +    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
 }
-
-laplacianSchemes
-{
-    default         Gauss linear limited 0.333;
-}
-
-interpolationSchemes
-{
-    default         linear;
-}
-
-snGradSchemes
-{
-    default         limited 0.333;
-}
-
-fluxRequired
-{
-    default         no;
-    p               ;
-}
-
 ```
+### 実行
+並列計算向けにメッシュ分割を行います
+``` 
+$ decomposePar
+```
+
+`run_insitu.sh`を以下の内容に編集します．
+```bash
+#!/bin/sh
+
+#unset FOAM_SIGFPE
+export FOAM_SIGFPE=false
+mpirun -n 8 ../my_rhoPimpleFoam/rhoPimpleFoam -parallel
+```
+
+実行します．
+``` 
+$ ./run_insitu.sh
+```
+
+### 実行結果の例
+<img width="512" height="512" alt="OralAifFlowVis" src="https://github.com/user-attachments/assets/28ae664c-4255-45aa-9efe-c077426bb432" />
