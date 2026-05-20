@@ -592,7 +592,7 @@ $ cp ../rhoPimpleFoam_InSituVis/InSituVis.h .
 #define IN_SITU_VIS__P
 #endif
 ```
-とします．`#define IN_SITU_VIS`から`#endif`までが追記内容です．今回は圧力Pの可視化を試みます．
+とします．**`#define IN_SITU_VIS`から`#endif`までが追記内容**です．以下同じです．今回は圧力Pの可視化を試みます．
 
 2つ目．main関数内部にて
 ```cpp
@@ -792,66 +792,66 @@ EXE = $(FOAM_USER_APPBIN)/my_PimpleFoam
 
 ### `Make/options`の編集（EGL版）
 EGL版のKVSを使用する場合には以下の通り編集して下さい．
-```bash
+```diff
 EXE_INC = \
 （数行省略）
     -I$(LIB_SRC)/TurbulenceModels/compressible/lnInclude \
     -I$(LIB_SRC)/regionFaModels/lnInclude \
-    -I$(HOME)/local/openmpi-4.1.2/include \ 
++    -I$(HOME)/local/openmpi-4.1.2/include \ 
 
 EXE_LIBS = \
 （省略）
 
 
 /* KVS settings (EGL / GPU Mode) */
-EXE_INC += \
-    -I${KVS_DIR}/include -DKVS_SUPPORT_MPI -DKVS_USE_MPI \
-    -DKVS_SUPPORT_EGL -DEGL_NO_X11 -DMESA_EGL_NO_X11_HEADERS
++EXE_INC += \
++    -I${KVS_DIR}/include -DKVS_SUPPORT_MPI -DKVS_USE_MPI \
++    -DKVS_SUPPORT_EGL -DEGL_NO_X11 -DMESA_EGL_NO_X11_HEADERS
 
-EXE_LIBS += \
-    -L${KVS_DIR}/lib -lkvsSupportMPI \
-    -lkvsSupportEGL -lkvsCore \
-    -lEGL -lGL
++EXE_LIBS += \
++    -L${KVS_DIR}/lib -lkvsSupportMPI \
++    -lkvsSupportEGL -lkvsCore \
++    -lEGL -lGL
 
 /* InSitu settings */
-EXE_INC += -I$(HOME)/Work/Github
-EXE_LIBS += -L$(HOME)/Work/Github/InSituVis/Lib -lInSituVis
++EXE_INC += -I$(HOME)/Work/Github
++EXE_LIBS += -L$(HOME)/Work/Github/InSituVis/Lib -lInSituVis
 
 /* OpenMP settings */
-EXE_INC += -fopenmp
-EXE_LIBS += -fopenmp
++EXE_INC += -fopenmp
++EXE_LIBS += -fopenmp
 ```
 ### `Make/options`の編集（OSMesa版）
 OSMesa版のkVSを使用する場合には以下のとおり編集して下さい
 
-```bash
+```diff
 EXE_INC = \
 （数行省略）
     -I$(LIB_SRC)/regionFaModels/lnInclude \
-    -I$(HOME)/local/openmpi-4.1.2/include \
++    -I$(HOME)/local/openmpi-4.1.2/include \
 
 EXE_LIBS = \
 （省略）
 
-LLVM_LIB = $(HOME)/local/llvm_15.0.7/lib
++LLVM_LIB = $(HOME)/local/llvm_15.0.7/lib
 
-/* KVS settings */
-EXE_INC += \
-        -I${KVS_DIR}/include -DKVS_SUPPORT_MPI -DKVS_USE_MPI\
-        -I${KVS_OSMESA_DIR}/include -DKVS_SUPPORT_OSMESA
-EXE_LIBS += \
-    -L$(LLVM_LIB) \
-        -L${KVS_DIR}/lib -lkvsSupportMPI -lkvsSupportOSMesa -lkvsCore \
-        -L${KVS_OSMESA_DIR}/lib/x86_64-linux-gnu ${KVS_OSMESA_LINK_LIBRARY} \
-        -L$(KVS_LIB_DIR) -lkvs
++/* KVS settings */
++EXE_INC += \
++        -I${KVS_DIR}/include -DKVS_SUPPORT_MPI -DKVS_USE_MPI\
++        -I${KVS_OSMESA_DIR}/include -DKVS_SUPPORT_OSMESA
++EXE_LIBS += \
++    -L$(LLVM_LIB) \
++        -L${KVS_DIR}/lib -lkvsSupportMPI -lkvsSupportOSMesa -lkvsCore \
++        -L${KVS_OSMESA_DIR}/lib/x86_64-linux-gnu ${KVS_OSMESA_LINK_LIBRARY} \
++        -L$(KVS_LIB_DIR) -lkvs
 
-/* InSitu settings */
-EXE_INC += -I$(HOME)/Work/Github
-EXE_LIBS += -L$(HOME)/Work/Github/InSituVis/Lib -lInSituVis
++/* InSitu settings */
++EXE_INC += -I$(HOME)/Work/Github
++EXE_LIBS += -L$(HOME)/Work/Github/InSituVis/Lib -lInSituVis
 
-/* OpenMP settings */
-EXE_INC += -fopenmp
-EXE_LIBS += -fopenmp
++/* OpenMP settings */
++EXE_INC += -fopenmp
++EXE_LIBS += -fopenmp
 ```
 
 ### ビルドの実行
