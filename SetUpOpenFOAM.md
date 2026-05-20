@@ -880,7 +880,7 @@ constant/turbulencePropertiesを以下の通り改造します．乱流モデル
 +   turbulence on;
 +   printCoeffs on;
 +   delta cubeRootVol;
-}
++}
 ```
 次に初期条件の設定ファイル名を変更します．
 ``` 
