@@ -4,7 +4,10 @@
 - Ubuntu 18.04 LTS, 22.04 LTS, 24.04LTSで動作確認済みです．
 - ディレクトリ階層を以下の通りとします．
 ```
-~/local/Work/GitHub
+└── $HOME/
+    ├── local
+    └── Work/
+        └── GitHub
 ```
 
 ## OpenFOAM v2412 の環境構築
@@ -790,36 +793,14 @@ EXE = $(FOAM_USER_APPBIN)/my_PimpleFoam
 EGL版のKVSを使用する場合には以下の通り編集して下さい．
 ```
 EXE_INC = \
-    -I$(LIB_SRC)/finiteVolume/cfdTools \
-    -I$(LIB_SRC)/finiteVolume/lnInclude \
-    -I$(LIB_SRC)/meshTools/lnInclude \
-    -I$(LIB_SRC)/dynamicMesh/lnInclude \
-    -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
-    -I$(LIB_SRC)/sampling/lnInclude \
-    -I$(LIB_SRC)/transportModels/compressible/lnInclude \
-    -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
-    -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
+（数行省略）
     -I$(LIB_SRC)/TurbulenceModels/compressible/lnInclude \
     -I$(LIB_SRC)/regionFaModels/lnInclude \
-    -I$(HOME)/local/openmpi-4.1.2/include \
+    -I$(HOME)/local/openmpi-4.1.2/include \ 
 
 EXE_LIBS = \
-    -lfiniteVolume \
-    -lfvOptions \
-    -lmeshTools \
-    -lcompressibleTransportModels \
-    -lfluidThermophysicalModels \
-    -lspecie \
-    -lturbulenceModels \
-    -lcompressibleTurbulenceModels \
-    -lthermoTools \
-    -ldynamicMesh \
-    -ldynamicFvMesh \
-    -ltopoChangerFvMesh \
-    -lsampling \
-    -latmosphericModels \
-    -lregionFaModels \
-    -lfiniteArea
+（省略）
+
 
 /* KVS settings (EGL / GPU Mode) */
 EXE_INC += \
@@ -839,3 +820,52 @@ EXE_LIBS += -L$(HOME)/Work/Github/InSituVis/Lib -lInSituVis
 EXE_INC += -fopenmp
 EXE_LIBS += -fopenmp
 ```
+### Make/optionsの編集（OSMesa版）
+OSMesa版のkVSを使用する場合には以下のとおり編集して下さい
+
+```
+EXE_INC = \
+（数行省略）
+    -I$(LIB_SRC)/regionFaModels/lnInclude \
+    -I$(HOME)/local/openmpi-4.1.2/include \
+
+EXE_LIBS = \
+（省略）
+
+LLVM_LIB = $(HOME)/local/llvm_15.0.7/lib
+
+/* KVS settings */
+EXE_INC += \
+        -I${KVS_DIR}/include -DKVS_SUPPORT_MPI -DKVS_USE_MPI\
+        -I${KVS_OSMESA_DIR}/include -DKVS_SUPPORT_OSMESA
+EXE_LIBS += \
+    -L$(LLVM_LIB) \
+        -L${KVS_DIR}/lib -lkvsSupportMPI -lkvsSupportOSMesa -lkvsCore \
+        -L${KVS_OSMESA_DIR}/lib/x86_64-linux-gnu ${KVS_OSMESA_LINK_LIBRARY} \
+        -L$(KVS_LIB_DIR) -lkvs
+
+/* InSitu settings */
+EXE_INC += -I$(HOME)/Work/Github
+EXE_LIBS += -L$(HOME)/Work/Github/InSituVis/Lib -lInSituVis
+
+/* OpenMP settings */
+EXE_INC += -fopenmp
+EXE_LIBS += -fopenmp
+```
+
+### ビルドの実行
+terminalで
+```
+$ wclean && wmake
+```
+でビルドします．エラーが出なければ成功です．
+
+## OralAirFlowVisの可視化
+可視化をします．ここでは例としてOralAirFlowVisに含まれるrealistic-s3を使用します．
+```
+$ cd ~/Work/GitHub/OralAirFlowVis/realistic-s3
+```
+
+### 解析ファイルの編集
+OralAirFlowVisはOpenFOAM 2.3.1向けの記述が残っているため，そのままでは動きません．OpenFOAM v2412で動作するように解析ファイルにも手を入れる必要があります．
+constant/turbulencePropertiesを以下の通り改造します．乱流モデルの設定です．
