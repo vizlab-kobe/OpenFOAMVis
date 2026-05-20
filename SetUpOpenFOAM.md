@@ -946,6 +946,12 @@ mpirun -n 8 ../my_rhoPimpleFoam/rhoPimpleFoam -parallel
 ``` 
 $ ./run_insitu.sh
 ```
+`Output`に画像が出力されます．
 
 ### 実行結果の例
-<img width="512" height="512" alt="OralAifFlowVis" src="https://github.com/user-attachments/assets/28ae664c-4255-45aa-9efe-c077426bb432" />
+
+
+# OpenFOAM tutorial解析の可視化
+## motorBikeの解析
+
+## propellerの解析
