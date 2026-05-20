@@ -869,3 +869,15 @@ $ cd ~/Work/GitHub/OralAirFlowVis/realistic-s3
 ### 解析ファイルの編集
 OralAirFlowVisはOpenFOAM 2.3.1向けの記述が残っているため，そのままでは動きません．OpenFOAM v2412で動作するように解析ファイルにも手を入れる必要があります．
 constant/turbulencePropertiesを以下の通り改造します．乱流モデルの設定です．
+
+まずconstant/turbulencePropertiesを以下のとおり改造します．乱流モデルの設定です．
+```diff
+- simulationType LESModel;
++ simulationType LES;
++ {
++   LESModel WALE;
++   turbulence on;
++   printCoeffs on;
++   delta cubeRootVol;
+}
+```
