@@ -1,4 +1,4 @@
-<img width="1663" height="138" alt="image" src="https://github.com/user-attachments/assets/9d90a0bb-50ec-4723-ba68-58dbc982ae16" /># OpenFOAMのセットアップ
+# OpenFOAMのセットアップ
 
 ## 準備
 - Ubuntu 18.04 LTS, 22.04 LTS, 24.04LTSで動作確認済みです．
@@ -43,13 +43,13 @@ $ make –j
 $ make install
 ```
 
-make installまで終了後，'~/.bashrc'にパスを記述する必要があります．
-以下の内容を'~/.bashrc'の末尾に記述しておきます．
+make installまで終了後，~/.bashrcにパスを記述する必要があります．
+以下の内容を~/.bashrcの末尾に記述しておきます．
 ```
 export PATH=$HOME/local/cmake-3.27.9/bin:$PATH
 ```
 
-terminalに戻って'~/.bashrc'を読み込みます．
+terminalに戻って~/.bashrcを読み込みます．
 ```
 $ source ~/.bashrc
 ```
@@ -69,7 +69,7 @@ $ make –j
 $ make install
 ```
 
-成功後，'~/.bashrc'に以下を追加します．コンパイラ (gcc/g++)がzlibを見つけられるようにします．
+成功後，~/.bashrcに以下を追加します．コンパイラ (gcc/g++)がzlibを見つけられるようにします．
 ```
 export ZLIB_DIR=$HOME/local/zlib-1.3.1
 export CPATH=$ZLIB_DIR/include:$CPATH
@@ -96,7 +96,7 @@ $ make –j
 $ make install
 ```
 
-成功後，'~/.bashrc'に以下を追加します．コンパイラ (gcc/g++)がzlibを見つけられるようにします．
+成功後，~/.bashrcに以下を追加します．コンパイラ (gcc/g++)がzlibを見つけられるようにします．
 ```
 export ZLIB_DIR=$HOME/local/zlib-1.3.1
 export CPATH=$ZLIB_DIR/include:$CPATH
