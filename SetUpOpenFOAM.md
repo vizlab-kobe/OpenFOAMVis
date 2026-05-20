@@ -949,9 +949,10 @@ $ ./run_insitu.sh
 `Output`に画像が出力されます．
 
 ### 実行結果の例
+Soon coming...
 
 
-# OpenFOAM tutorial解析の可視化
+# OpenFOAM tutorial解析の可視化（5/26以降執筆予定）
 ## motorBikeの解析
 
 ## propellerの解析
