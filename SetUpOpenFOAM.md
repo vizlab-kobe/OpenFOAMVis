@@ -949,7 +949,8 @@ $ ./run_insitu.sh
 `Output`に画像が出力されます．
 
 ### 実行結果の例
-Soon coming...
+
+<img width="512" height="512" alt="OralAirFlowVis" src="https://github.com/user-attachments/assets/b6fc3d9b-23ce-46cc-9ca9-892fb14936d5" />
 
 
 # OpenFOAM tutorial解析の可視化（5/26以降執筆予定）
