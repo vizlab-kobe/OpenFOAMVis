@@ -126,6 +126,12 @@ $ make –j
 $ make install
 ```
 
+※ glibcが2.26~2.28あたりの環境では`configure`コマンド実行時にエラーが発生するようです．上記の代わりに
+```
+$ ../configure --prefix=$HOME/local/flex-2.6.4 CFLAGS="-D_GNU_SOURCE" ac_cv_func_reallocarray=yes
+```
+としてください．glibcのバージョンは```ldd --version```で確認可能です．
+
 成功後，`~/.bashrc`に以下を追加します．コンパイラ (gcc/g++)がflexを見つけられるようにします．
 ```bash
 export PATH=$HOME/local/flex-2.6.4/bin:$PATH
@@ -193,9 +199,9 @@ https://www.openfoam.com/download/release-history
 ``` 
 $ cd ~/Work/Github
 $ wget https://dl.openfoam.com/source/v2412/OpenFOAM-v2412.tgz
-$ tar –xvf OpenFOAM-v2412
+$ tar –xvf OpenFOAM-v2412.tgz
 $ wget https://dl.openfoam.com/source/v2412/ThirdParty-v2412.tgz
-$ tar –xvf ThirdParty-v2412
+$ tar –xvf ThirdParty-v2412.tgz
 ```
 
 (参考：https://qiita.com/yotakagi77/items/17006fd0dedef3acc573)
@@ -209,7 +215,7 @@ $ cd ~/Work/Github/ThirdParty-v2412
 gmp，mpfr, mpc, cmake, qtをダウンロードします．
 ``` 
 $ wget https://ftp.gnu.org/gnu/gmp/gmp-6.2.0.tar.xz
-$ tar –xvf gmp-6.2.0.tar.gz
+$ tar –xvf gmp-6.2.0.tar.xz
 $ wget https://ftp.gnu.org/gnu/mpfr/mpfr-4.0.2.tar.xz
 $ tar –xvf mpfr-4.0.2.tar.xz
 $ wget https://ftp.gnu.org/gnu/mpc/mpc-1.1.0.tar.gz
@@ -349,6 +355,11 @@ export KVS_DIR=$HOME/local/kvs
 export PATH=$KVS_DIR/bin:$PATH
 unset DISPLAY
 ```
+terminalに戻って~/.bashrcを読み込みます．
+``` 
+$ source ~/.bashrc
+```
+
 
 ## ビルドについての検討
 2つ作戦があります．
@@ -884,7 +895,7 @@ constant/turbulencePropertiesを以下の通り改造します．乱流モデル
 ```
 次に初期条件の設定ファイル名を変更します．
 ``` 
-$ rm -r processer*
+$ rm -r processor*
 $ mv 0/alphaSgs 0/alphat
 $ mv 0/muSgs 0/nut
 ```
