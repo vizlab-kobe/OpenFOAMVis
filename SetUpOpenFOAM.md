@@ -964,7 +964,32 @@ $ ./run_insitu.sh
 <img width="512" height="512" alt="OralAirFlowVis" src="https://github.com/user-attachments/assets/b6fc3d9b-23ce-46cc-9ca9-892fb14936d5" />
 
 
-# OpenFOAM tutorial解析の可視化（5/26以降執筆予定）
-## motorBikeの解析
-
+# OpenFOAM tutorial解析の可視化（順次執筆）
 ## propellerの解析
+
+ここではOpenFOAM tutorialに含まれるpropellerの非定常解析のin-situ可視化を行います．propellerの回転によって誘起されるQ値の等値面を可視化します．
+
+### ソルバーの編集
+まずはソルバーの改造環境を作成します．
+```
+$ cd ~/local
+$ mkdir OpenFOAM
+$ cd OpenFOAM
+$ cp -r $FOAM_SOLVERS/incompressible/pimpleFoam/ ./propeller_pimpleFoam
+$ cd propeller_pimpleFoam
+```
+
+まずは`Make/files`を以下のとおり編集します．
+```diff
+-EXE = $(FOAM_APPBIN)/pimpleFoam
++EXE = $(FOAM_USER_APPBIN)/propeller_pimpleFoam
+```
+この設定を行うことで，今までのpimpleFoam（非定常非圧縮流体向けソルバー）を維持したままpropeller解析用の特別な設定を施したソルバーpropeller_pimpleFoamが使用可能になります．
+
+次に`Make/options`を以下のように編集します．EGL版の場合は
+
+
+coming soon....
+
+
+## motorBike
