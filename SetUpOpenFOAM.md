@@ -1343,7 +1343,7 @@ public:
 #endif
 ```
 さらにその下で，`stl`ファイルの可視化と回転を行います．既存の設定のではIsosurface可視化の際に`stl`が出現しません．
-```
+```diff
     void exec( const BaseClass::SimTime sim_time )
     {
         if ( !BaseClass::screen().scene()->hasObject( "BoundaryMesh") )
