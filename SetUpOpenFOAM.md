@@ -1188,8 +1188,8 @@ OralAirFlowVisと同様，5つの改造箇所があります．
         const double act_min = gMin(field);
         const double act_max = gMax(field);
 
-        const auto min_value = 4000;
-        const auto max_value = 8000;
+        const auto min_value = 1000;
+        const auto max_value = 10000;
 #endif
 
         // Convert OpenFOAM data to KVS data
