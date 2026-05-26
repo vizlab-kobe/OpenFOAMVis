@@ -964,13 +964,57 @@ $ ./run_insitu.sh
 <img width="512" height="512" alt="OralAirFlowVis" src="https://github.com/user-attachments/assets/b6fc3d9b-23ce-46cc-9ca9-892fb14936d5" />
 
 
-# OpenFOAM tutorial解析の可視化（順次執筆）
+# OpenFOAM tutorial解析の可視化
 ## propellerの解析
 
 ここではOpenFOAM tutorialに含まれるpropellerの非定常解析のin-situ可視化を行います．propellerの回転によって誘起されるQ値の等値面を可視化します．
 
+### 解析の準備
+まずは解析の準備を整えます．
+
+```
+$ mkdir ~/local/calc
+$ cp -r $FOAM_TUTORIALS/incompressible/pimpleFoam/RAS/propeller ~/local/calc/vis_propeller
+```
+
+※なお，`vis_propeller`ディレクトリには**大量の画像（および解析結果ファイル）が生成**されることになります．
+余裕のある記憶媒体かどうか確認することをおすすめします．
+
+坂本研究室の関係者で，研究室PC`10.34.33.219`を使用している方は，
+```
+$ cp -r $FOAM_TUTORIALS/incompressible/pimpleFoam/RAS/propeller /data2/(user_name)/local/calc/vis_propeller
+```
+として下さい．
+
+次にメッシュの準備をします．
+```
+$ cd ~/local/calc/vis_propeller
+$ ./Allrun.pre
+```
+完了後，`stl`を準備します．
+```
+$ cd ./constant/triSurface
+```
+ここには`*.obj.gz`ファイルが並んでいます．すべて展開した後，`surfaceConvert`というOpenFOAMのコマンドを使用して`obj`から`stl`に変換します．
+```
+$ gunzip *.obj.gz
+$ for file in *.obj; do surfaceConvert "$file" "${file%.obj}.stl"; done
+```
+ディレクトリに`stl`ファイルが7つ生成されたことを確認します．
+```
+$ ls *.stl
+innerCylinderSmall.stl  innerCylinder.stl  outerCylinder.stl  propellerStem1.stl  propellerStem2.stl  propellerStem3.stl  propellerTip.stl
+```
+
+残りの準備も済ませておきます．
+```
+$ cd ../..
+$ cp -r 0.org 0
+$ decomposePar
+```
+
 ### ソルバーの編集
-まずはソルバーの改造環境を作成します．
+ソルバーの改造環境を作成します．
 ```
 $ cd ~/local
 $ mkdir OpenFOAM
@@ -1089,6 +1133,227 @@ EXE_LIBS = \
 となります．
 
 次のソルバーの改造です．OralAirFlowVisとほとんど同じですが，Q値の等値面可視化用のプラグインを入れます．
+
+OralAirFlowVisと同様，5つの改造箇所があります．
+1つ目：ヘッダーの部分
+```cpp
+#include "fvCFD.H"
+#include "dynamicFvMesh.H"
+#include "singlePhaseTransportModel.H"
+#include "turbulentTransportModel.H"
+#include "pimpleControl.H"
+#include "CorrectPhi.H"
+#include "fvOptions.H"
+#include "localEulerDdtScheme.H"
+#include "fvcSmooth.H"
+
+// In-situ visualization
+#define IN_SITU_VIS
+#if defined( IN_SITU_VIS )
+//#include "InSituVis.h"
+#include "InSituVis.h"
+#include <InSituVis/Lib.foam/FoamToKVS.h>
+
+
+//#define IN_SITU_VIS__P
+//#define IN_SITU_VIS__U
+#define IN_SITU_VIS__Q
+#endif
+```
+
+2つ目と3つ目はOralAirFlowVisと同じ．
+
+4つ目．時間発展のwhile文の内部です．Q値の可視化を行います．
+```cpp
+#if defined( IN_SITU_VIS )
+        vis.simTimer().stamp();
+        const auto ts = vis.simTimer().last();
+        const auto Ts = kvs::String::From( ts, 4 );
+        vis.log() << indent << "Processing Times:" << std::endl;
+        vis.log() << indent.nextIndent() << "Simulation: " << Ts << " s" << std::endl;
+#if defined( IN_SITU_VIS__P ) // p: pressure
+        auto& field = p;
+        const auto min_value = 0.999990 * 100000.0;
+        const auto max_value = 1.000200 * 100000.0;
+#elif defined( IN_SITU_VIS__U ) // U: velocity
+        auto& field = U;
+        const auto min_value = 0.0;
+        const auto max_value = 71.645393372;
+#elif defined( IN_SITU_VIS__Q )
+        volTensorField gradU = fvc::grad(U);
+        volScalarField Q
+          (
+           IOobject("Q", runTime.timeName(), mesh, IOobject::NO_READ, IOobject::NO_WRITE),
+           0.5 * (magSqr(skew(gradU)) - magSqr(symm(gradU)))
+           );
+
+        auto& field = Q;
+
+        const double act_min = gMin(field);
+        const double act_max = gMax(field);
+
+        const auto min_value = 6000;
+        const auto max_value = 8000;
+#endif
+
+        // Convert OpenFOAM data to KVS data
+        vis.cnvTimer().start();
+        InSituVis::foam::FoamToKVS converter( field );
+        using CellType = InSituVis::foam::FoamToKVS::CellType;
+        auto vol_tet = converter.exec( vis.world(), field, CellType::Tetrahedra );
+        auto vol_hex = converter.exec( vis.world(), field, CellType::Hexahedra );
+        auto vol_pri = converter.exec( vis.world(), field, CellType::Prism );
+        auto vol_pyr = converter.exec( vis.world(), field, CellType::Pyramid );
+        vis.cnvTimer().stamp();
+
+        vol_tet.setName("Tet");
+        vol_hex.setName("Hex");
+        vol_pri.setName("Pri");
+        vol_pyr.setName("Pyr");
+
+        vol_tet.setMinMaxValues( min_value, max_value );
+        vol_hex.setMinMaxValues( min_value, max_value );
+        vol_pri.setMinMaxValues( min_value, max_value );
+        vol_pyr.setMinMaxValues( min_value, max_value );
+
+        const auto tc = vis.cnvTimer().last();
+        const auto Tc = kvs::String::From( tc, 4 );
+        vis.log() << indent.nextIndent() << "Conversion: " << Tc << " s" << std::endl;
+
+        // Execute visualization pipeline and rendering
+        vis.visTimer().start();
+        vis.put( vol_tet );
+        vis.put( vol_hex );
+        vis.put( vol_pri );
+        vis.put( vol_pyr );
+        vis.exec( { current_time_value, current_time_index } );
+        vis.visTimer().stamp();
+
+        const auto tv = vis.visTimer().last();
+        const auto Tv = kvs::String::From( tv, 4 );
+        vis.log() << indent.nextIndent() << "Visualization: " << Tv << " s" << std::endl;
+
+        const auto elapsed_time = runTime.elapsedCpuTime();
+        vis.log() << indent << "Elapsed Time: " << elapsed_time << " s" << std::endl;
+        vis.log() << std::endl;
+#endif // IN_SITU_VIS
+
+        runTime.printExecutionTime(Info);
+    }
+```
+5つ目もOralAirFlowVisと同じ．
+
+`InSituVis.h`をコピーします．
+```
+cp ~/Work/GitHub/OralAirFlowVis/rhoPimpleFoam_InSituVis/InSituVis.h ~/local/OpenFOAM/propeller_pimpleFoam
+```
+
+`InSituVis.h`を編集します．
+
+まず冒頭からの部分ですが
+```diff
+// Parameters
+//----------------------------------------------------------------------------
+namespace Params
+{
+struct Output
+{
+static const auto Image = true;
+static const auto SubImage = false;
+static const auto SubImageDepth = false;
+static const auto SubImageAlpha = false;
+};
+
+const auto ImageSize = kvs::Vec2ui{ 512, 512 }; // width x height
+const auto AnalysisInterval = 5; // l: analysis (visuaization) time interval
+
+- const auto VisibleBoundingBox = true;
+- const auto VisibleBoundaryMesh = false;
++ const auto VisibleBoundingBox = false;
++ const auto VisibleBoundaryMesh = true;
+
+// For IN_SITU_VIS__VIEWPOINT__*
+const auto ViewPos = kvs::Vec3{ 7, 5, 6 }; // viewpoint position
+const auto ViewDim = kvs::Vec3ui{ 3, 3, 3 }; // viewpoint dimension
+const auto ViewDir = InSituVis::Viewpoint::Direction::Uni; // Uni or Omni
+const auto Viewpoint = InSituVis::Viewpoint{ { ViewDir, ViewPos } };
+const auto ViewpointCubic = InSituVis::CubicViewpoint{ ViewDim, ViewDir };
+const auto ViewpointSpherical = InSituVis::SphericalViewpoint{ ViewDim, ViewDir };
+
+// For IN_SITU_VIS__ADAPTOR__STOCHASTIC_RENDERING
+const auto Repeats = 50; // number of repetitions for stochastic rendering
+const auto BoundaryMeshOpacity = 30; // opacity value [0-255] of boundary mesh
+}
+
+/*****************************************************************************/
+
+
+
+namespace local
+{
+
+class InSituVis : public ::Adaptor
+{
+    using BaseClass = ::Adaptor;
+    using Object = BaseClass::Object;
+    using Volume = kvs::UnstructuredVolumeObject;
+    using Screen = BaseClass::Screen;
+
+public:
+    static Pipeline WholeMinMaxValues();
+    static Pipeline OrthoSlice();
+    static Pipeline Isosurface();
+    static Pipeline ExternalFace( const kvs::mpi::Communicator& world );
+    static Pipeline StochasticRendering( const size_t repeats );
+
+private:
+    kvs::PolygonObject m_boundary_mesh; ///< boundary mesh
+    kvs::mpi::StampTimer m_sim_timer{ BaseClass::world() }; ///< timer for sim. process
+    kvs::mpi::StampTimer m_cnv_timer{ BaseClass::world() }; ///< timer for cnv. process
+    kvs::mpi::StampTimer m_vis_timer{ BaseClass::world() }; ///< timer for vis. process
+    kvs::Real64 m_whole_min_value = 0.0; ///< min. value of whole time-varying volume data
+    kvs::Real64 m_whole_max_value = 0.0; ///< max. value of whole time-varying volume data
+
+public:
+    InSituVis( const MPI_Comm world = MPI_COMM_WORLD, const int root = 0 ): BaseClass( world, root )
+    {
+
++      this->setOutputFilename("propeller");
+
+        // Common parameters.
+        this->setImageSize( Params::ImageSize.x(), Params::ImageSize.y() );
+        this->setOutputImageEnabled( Params::Output::Image );
+        this->setOutputSubImageEnabled(
+            Params::Output::SubImage,
+            Params::Output::SubImageDepth,
+            Params::Output::SubImageAlpha );
+
+        // Import boundary mesh.
+-        this->importBoundaryMesh( "./constant/triSurface/realistic-cfd3.stl" );
++        this->importBoundaryMesh("./constant/triSurface/propellerStem1.stl");
++        this->importBoundaryMesh("./constant/triSurface/propellerStem2.stl");
++        this->importBoundaryMesh("./constant/triSurface/propellerStem3.stl");
++        this->importBoundaryMesh("./constant/triSurface/propellerTip.stl");
+        // Time intervals.
+        this->setAnalysisInterval( Params::AnalysisInterval );
+
+        // Set visualization pipeline.
+#if defined( IN_SITU_VIS__ADAPTOR__STOCHASTIC_RENDERING )
+        this->setRepetitionLevel( Params::Repeats );
+        this->setPipeline( local::InSituVis::StochasticRendering( Params::Repeats ) );
+#elif defined( IN_SITU_VIS__PIPELINE__ORTHO_SLICE )
+        this->setPipeline( local::InSituVis::OrthoSlice() );
+#elif defined( IN_SITU_VIS__PIPELINE__ISOSURFACE )
+        this->setPipeline( local::InSituVis::Isosurface() );
+#elif defined( IN_SITU_VIS__PIPELINE__EXTERNAL_FACE )
+        this->setPipeline( local::InSituVis::ExternalFace( BaseClass::world() ) );
+#endif
+```
+
+さらに`stl`を回転します．
+
 coming soon....
+
+
 
 ## motorBike
