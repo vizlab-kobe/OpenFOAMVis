@@ -998,13 +998,9 @@ $ cd ./constant/triSurface
 ここには`*.obj.gz`ファイルが並んでいます．すべて展開した後，`surfaceConvert`というOpenFOAMのコマンドを使用して`obj`から`stl`に変換します．
 ```
 $ gunzip *.obj.gz
-$ for file in *.obj; do surfaceConvert "$file" "${file%.obj}.stl"; done
+$ surfaceConvert propellerTip.obj propellerTip.stl
 ```
-ディレクトリに`stl`ファイルが7つ生成されたことを確認します．
-```
-$ ls *.stl
-innerCylinderSmall.stl  innerCylinder.stl  outerCylinder.stl  propellerStem1.stl  propellerStem2.stl  propellerStem3.stl  propellerTip.stl
-```
+`propellerTip.stl`は回転するプロペラ部分の3Dオブジェクトです．
 
 残りの準備も済ませておきます．
 ```
@@ -1192,7 +1188,7 @@ OralAirFlowVisと同様，5つの改造箇所があります．
         const double act_min = gMin(field);
         const double act_max = gMax(field);
 
-        const auto min_value = 6000;
+        const auto min_value = 4000;
         const auto max_value = 8000;
 #endif
 
@@ -1273,7 +1269,7 @@ const auto AnalysisInterval = 5; // l: analysis (visuaization) time interval
 + const auto VisibleBoundaryMesh = true;
 
 // For IN_SITU_VIS__VIEWPOINT__*
-const auto ViewPos = kvs::Vec3{ 7, 5, 6 }; // viewpoint position
+const auto ViewPos = kvs::Vec3{ 4, 3, 4.5 }; // viewpoint position
 const auto ViewDim = kvs::Vec3ui{ 3, 3, 3 }; // viewpoint dimension
 const auto ViewDir = InSituVis::Viewpoint::Direction::Uni; // Uni or Omni
 const auto Viewpoint = InSituVis::Viewpoint{ { ViewDir, ViewPos } };
@@ -1330,9 +1326,6 @@ public:
 
         // Import boundary mesh.
 -        this->importBoundaryMesh( "./constant/triSurface/realistic-cfd3.stl" );
-+        this->importBoundaryMesh("./constant/triSurface/propellerStem1.stl");
-+        this->importBoundaryMesh("./constant/triSurface/propellerStem2.stl");
-+        this->importBoundaryMesh("./constant/triSurface/propellerStem3.stl");
 +        this->importBoundaryMesh("./constant/triSurface/propellerTip.stl");
         // Time intervals.
         this->setAnalysisInterval( Params::AnalysisInterval );
@@ -1349,6 +1342,70 @@ public:
         this->setPipeline( local::InSituVis::ExternalFace( BaseClass::world() ) );
 #endif
 ```
+さらにその下で，`stl`ファイルの可視化と回転を行います．既存の設定のではIsosurface可視化の際に`stl`が出現しません．
+```
+    void exec( const BaseClass::SimTime sim_time )
+    {
+        if ( !BaseClass::screen().scene()->hasObject( "BoundaryMesh") )
+        {
+            const bool visible = BaseClass::world().rank() == BaseClass::world().root ();
+            auto* object = new kvs::PolygonObject();
+            object->shallowCopy( m_boundary_mesh );
+            object->setName( "BoundaryMesh" );
+            object->setVisible( visible );
+
+            // Register the bounding box at the root rank.
+#if defined( IN_SITU_VIS__ADAPTOR__STOCHASTIC_RENDERING )
+            // Bounding box
+            kvs::Bounds bounds( kvs::RGBColor::Black(), 1.0f );
+            auto* o = bounds.outputLineObject( object );
+            o->setVisible( object->isVisible() );
+            auto* r = new kvs::StochasticLineRenderer();
+            BaseClass::screen().registerObject( o, r );
+            // Boundary mesh
+            object->setOpacity( Params::BoundaryMeshOpacity );
+            auto* renderer = new kvs::StochasticPolygonRenderer();
+            renderer->setTwoSideLightingEnabled( true );
+            renderer->setEdgeFactor( 0.6f );
+            BaseClass::screen().registerObject( object, renderer );
+#else
+
+            // Bounding box
+-            BaseClass::screen().registerObject( object, new kvs::Bounds() );
+-            object->setVisible( Params::VisibleBoundingBox );
+
++            object->setVisible( visible );
++            if ( Params::VisibleBoundingBox )
++              {
++                BaseClass::screen().registerObject( object, new kvs::Bounds() );
++              }
+
++            if ( Params::VisibleBoundaryMesh )
++              {
++                auto* renderer = new kvs::PolygonRenderer();
++                renderer->setTwoSideLightingEnabled( true );
++                BaseClass::screen().registerObject( object, renderer );
++              }
+#endif
+        }
+
++        auto* mesh = kvs::PolygonObject::DownCast( BaseClass::screen().scene()->object( "BoundaryMesh" ) );
++        if ( mesh )
++          {
++            const double omega = 158.0;          // omega [rad/s]
++            const kvs::Vec3 axis( 0, 1, 0 );     // axis (y-axis)
++            double angle_deg = ( omega * sim_time.value ) * ( 180.0 / kvs::Math::PI() );
++            kvs::Matrix33f R = kvs::Matrix33f::Rotation( axis, angle_deg );
++            kvs::Xform xform = mesh->xform();
++            kvs::Xform new_xform( xform.translation(), xform.scaling(), R );
++            mesh->setXform( new_xform );
++          }
+
+#if defined( IN_SITU_VIS__UPDATE_MIN_MAX_VALUES )
+        // Update min/max values of the volume data in each time step.
+        auto min_value = Volume::DownCast( *BaseClass::objects().begin() )->minValue();
+```
+デフォルトのtutorialではy軸周りに158 [rad/s]で回転します．設定は`~/local/calc/vis_propeller/constant/dynamicMeshDict`で確認できます．
 
 scaleの設定を改めます．importBoundaryMesh関数について
 ```diff
@@ -1372,12 +1429,108 @@ scaleの設定を改めます．importBoundaryMesh関数について
         m_boundary_mesh.setMinMaxExternalCoords( min_coord, max_coord );
 
 ```
+この設定を行うことで，`stl`ファイルと解析可視化が等倍で可視化できるようになります．
 
+解析領域全体の表示，およびboundary meshの二重登録回避のために
+```diff
+inline InSituVis::Pipeline InSituVis::Isosurface()
+{
+    return [&] ( Screen& screen, const Object& object )
+    {
+        Volume volume; volume.shallowCopy( Volume::DownCast( object ) );
+        if ( volume.numberOfCells() == 0 ) { return; }
 
-さらに`stl`を回転します．
+        auto* mesh = kvs::PolygonObject::DownCast( screen.scene()->object( "BoundaryMesh" ) );
+        if ( mesh )
+        {
+-            const auto min_coord = mesh->minExternalCoord();
+-            const auto max_coord = mesh->maxExternalCoord();
+-            volume.setMinMaxObjectCoords( min_coord, max_coord );
+-            volume.setMinMaxExternalCoords( min_coord, max_coord );
+        }
 
-coming soon....
+        // Setup a transfer function.
+        const auto min_value = volume.minValue();
+        const auto max_value = volume.maxValue();
+        //auto t = kvs::TransferFunction( kvs::ColorMap::CoolWarm() );
+        auto t = kvs::TransferFunction( kvs::ColorMap::BrewerSpectral() );
+        t.setRange( min_value, max_value );
+        // Create new object
+        auto n = kvs::Isosurface::PolygonNormal;
+        auto d = true;
+        auto i0 = kvs::Math::Mix( min_value, max_value, 0.1 );
+        auto* object0 = new kvs::Isosurface( &volume, i0, n, d, t );
+        object0->setName( volume.name() + "Object0");
 
+        auto i1 = kvs::Math::Mix( min_value, max_value, 0.3 );
+        auto* object1 = new kvs::Isosurface( &volume, i1, n, d, t );
+        object1->setName( volume.name() + "Object1");
 
+        auto i2 = kvs::Math::Mix( min_value, max_value, 0.7 );
+        auto* object2 = new kvs::Isosurface( &volume, i2, n, d, t );
+        object2->setName( volume.name() + "Object2");
+
+        // Register object and renderer to screen
+        kvs::Light::SetModelTwoSide( true );
+        if ( screen.scene()->hasObject( volume.name() + "Object0") )
+        {
+            // Update the objects.
+            screen.scene()->replaceObject( volume.name() + "Object0", object0 );
+            screen.scene()->replaceObject( volume.name() + "Object1", object1 );
+            screen.scene()->replaceObject( volume.name() + "Object2", object2 );
+        }
+        else
+        {
+            // Register the objects with renderer.
+            auto* renderer0 = new kvs::glsl::PolygonRenderer();
+            auto* renderer1 = new kvs::glsl::PolygonRenderer();
+            auto* renderer2 = new kvs::glsl::PolygonRenderer();
+            renderer0->setTwoSideLightingEnabled( true );
+            renderer1->setTwoSideLightingEnabled( true );
+            renderer2->setTwoSideLightingEnabled( true );
+            screen.registerObject( object0, renderer0 );
+            screen.registerObject( object1, renderer1 );
+            screen.registerObject( object2, renderer2 );
+
+            // Boundary mesh
+-            if ( Params::VisibleBoundaryMesh )
+-              {
+-                auto* renderer = new kvs::PolygonRenderer();
+-                renderer->setTwoSideLightingEnabled( true );
+-                screen.registerObject( mesh, renderer );
+-              }
+        }
+    };
+}
+```
+として下さい．
+
+編集が終わったら
+```
+$ wclean && wmake
+```
+でビルドします．
+
+### 解析の実行
+解析ディレクトリに移動します．
+```
+$ cd ~/local/calc/vis_propeller
+```
+解析の実行です．
+```
+$ mpirun -np 4 propeller_pimpleFoam -parallel
+```
+計算に非常に長い時間がかかりますので，
+```
+$ nohup mpirun -np 4 propeller_pimpleFoam -parallel 2>&1 log.dat &
+```
+として
+```
+$ tail -f log.dat
+```
+で監視しても良いです．
+
+### 結果例
+comming soon...
 
 ## motorBike
