@@ -987,9 +987,55 @@ $ cd propeller_pimpleFoam
 この設定を行うことで，今までのpimpleFoam（非定常非圧縮流体向けソルバー）を維持したままpropeller解析用の特別な設定を施したソルバーpropeller_pimpleFoamが使用可能になります．
 
 次に`Make/options`を以下のように編集します．EGL版の場合は
+```diff
+EXE_INC = \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude \
+    -I$(LIB_SRC)/sampling/lnInclude \
+    -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
+    -I$(LIB_SRC)/TurbulenceModels/incompressible/lnInclude \
+    -I$(LIB_SRC)/transportModels \
+    -I$(LIB_SRC)/transportModels/incompressible/singlePhaseTransportModel \
+    -I$(LIB_SRC)/dynamicMesh/lnInclude \
+    -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
+    -I$(LIB_SRC)/regionFaModels/lnInclude \
++    -I$(HOME)/local/openmpi-4.1.2/include \
 
+EXE_LIBS = \
+    -lfiniteVolume \
+    -lfvOptions \
+    -lmeshTools \
+    -lsampling \
+    -lturbulenceModels \
+    -lincompressibleTurbulenceModels \
+    -lincompressibleTransportModels \
+    -ldynamicMesh \
+    -ldynamicFvMesh \
+    -ltopoChangerFvMesh \
+    -latmosphericModels \
+    -lregionFaModels \
+    -lfiniteArea
 
-coming soon....
++/* KVS settings (EGL / GPU Mode) */
++EXE_INC += \
++    -I${KVS_DIR}/include -DKVS_SUPPORT_MPI -DKVS_USE_MPI \
++    -DKVS_SUPPORT_EGL -DEGL_NO_X11 -DMESA_EGL_NO_X11_HEADERS
 
++EXE_LIBS += \
++    -L${KVS_DIR}/lib -lkvsSupportMPI \
++    -lkvsSupportEGL -lkvsCore \
++    -lEGL -lGL
 
++/* InSitu settings */
++EXE_INC += -I$(HOME)/Work/Github
++EXE_LIBS += -L$(HOME)/Work/Github/InSituVis/Lib -lInSituVis
+
++/* OpenMP settings */
++EXE_INC += -fopenmp
++EXE_LIBS += -fopenmpmurase@xrteam04:~/local/OpenFOAM/propeller_pimpleFoam$
+```
+です．
+
+OpenGL版の場合には
+comming soon
 ## motorBike
