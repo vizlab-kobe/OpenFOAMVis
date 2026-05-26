@@ -1250,7 +1250,7 @@ cp ~/Work/GitHub/OralAirFlowVis/rhoPimpleFoam_InSituVis/InSituVis.h ~/local/Open
 
 `InSituVis.h`を編集します．
 
-まず冒頭からの部分ですが
+まず冒頭の部分ですが
 ```diff
 // Parameters
 //----------------------------------------------------------------------------
@@ -1349,6 +1349,30 @@ public:
         this->setPipeline( local::InSituVis::ExternalFace( BaseClass::world() ) );
 #endif
 ```
+
+scaleの設定を改めます．importBoundaryMesh関数について
+```diff
+    void importBoundaryMesh( const std::string& filename )
+    {
+        m_boundary_mesh = kvs::PolygonImporter( filename );
+
+        // Scaling coordinate values of the boundary object adjusing to
+        // the coordinate scale of the volume dataset.
+-       const auto scale = 1.0f / 1000.0f;
++       const auto scale = 1.0f;
+        {
+            auto coords = m_boundary_mesh.coords();
+            for ( auto& p : coords ) { p *= scale; }
+            m_boundary_mesh.setCoords( coords );
+        }
+
+        const auto min_coord = m_boundary_mesh.minObjectCoord() * scale;
+        const auto max_coord = m_boundary_mesh.maxObjectCoord() * scale;
+        m_boundary_mesh.setMinMaxObjectCoords( min_coord, max_coord );
+        m_boundary_mesh.setMinMaxExternalCoords( min_coord, max_coord );
+
+```
+
 
 さらに`stl`を回転します．
 
