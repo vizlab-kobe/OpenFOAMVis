@@ -995,16 +995,15 @@ $ ./Allrun.pre
 ```
 $ cd ./constant/triSurface
 ```
-ここには`*.obj.gz`ファイルが並んでいます．すべて展開した後，`surfaceConvert`というOpenFOAMのコマンドを使用して`obj`から`stl`に変換します．
+ここには`*.obj.gz`ファイルが並んでいます．今回使用するのは回転するプロペラ部分の3Dオブジェクトである`propellerTip.obj.gz`です．展開した後，`surfaceConvert`というOpenFOAMのコマンドを使用して`obj`から`stl`に変換します．
 ```
-$ gunzip *.obj.gz
+$ gunzip propellerTip.obj.gz
 $ surfaceConvert propellerTip.obj propellerTip.stl
 ```
-`propellerTip.stl`は回転するプロペラ部分の3Dオブジェクトです．
 
 残りの準備も済ませておきます．
 ```
-$ cd ../..
+$ cd ../../
 $ cp -r 0.org 0
 $ decomposePar
 ```
@@ -1520,7 +1519,7 @@ $ cd ~/local/calc/vis_propeller
 ```
 $ mpirun -np 4 propeller_pimpleFoam -parallel
 ```
-計算に非常に長い時間がかかりますので，
+環境にも依りますが，計算に非常に長い時間がかかりますので，
 ```
 $ nohup mpirun -np 4 propeller_pimpleFoam -parallel 2>&1 log.dat &
 ```
@@ -1531,6 +1530,7 @@ $ tail -f log.dat
 で監視しても良いです．
 
 ### 結果例
-comming soon...
+coming soon...
 
 ## motorBike
+coming soon...
