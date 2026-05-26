@@ -1,4 +1,3 @@
-<img width="512" height="512" alt="propeller_iso" src="https://github.com/user-attachments/assets/66d46f5e-f425-433f-a54a-9fa14920f20c" />
 # OpenFOAMのセットアップ
 
 ## 準備
