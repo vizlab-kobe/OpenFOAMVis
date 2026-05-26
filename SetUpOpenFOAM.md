@@ -1027,15 +1027,68 @@ EXE_LIBS = \
 +    -lEGL -lGL
 
 +/* InSitu settings */
++EXE_INC += -I$(HOME)/Work/GitHub
++EXE_LIBS += -L$(HOME)/Work/GitHub/InSituVis/Lib -lInSituVis
+
++/* OpenMP settings */
++EXE_INC += -fopenmp
++EXE_LIBS += -fopenmp
+```
+です．
+
+osmesa版の場合には
+```diff
+EXE_INC = \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude \
+    -I$(LIB_SRC)/sampling/lnInclude \
+    -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
+    -I$(LIB_SRC)/TurbulenceModels/incompressible/lnInclude \
+    -I$(LIB_SRC)/transportModels \
+    -I$(LIB_SRC)/transportModels/incompressible/singlePhaseTransportModel \
+    -I$(LIB_SRC)/dynamicMesh/lnInclude \
+    -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
+    -I$(LIB_SRC)/regionFaModels/lnInclude \
++    -I$(HOME)/local/openmpi-4.1.2/include \
+
+EXE_LIBS = \
+    -lfiniteVolume \
+    -lfvOptions \
+    -lmeshTools \
+    -lsampling \
+    -lturbulenceModels \
+    -lincompressibleTurbulenceModels \
+    -lincompressibleTransportModels \
+    -ldynamicMesh \
+    -ldynamicFvMesh \
+    -ltopoChangerFvMesh \
+    -latmosphericModels \
+    -lregionFaModels \
+    -lfiniteArea
+
++LLVM_LIB = $(HOME)/local/llvm_15.0.7/lib
+
++/* KVS settings */
++EXE_INC += \
++        -I${KVS_DIR}/include -DKVS_SUPPORT_MPI -DKVS_USE_MPI\
++        -I${KVS_OSMESA_DIR}/include -DKVS_SUPPORT_OSMESA
++EXE_LIBS += \
++    -L$(LLVM_LIB) \
++        -L${KVS_DIR}/lib -lkvsSupportMPI -lkvsSupportOSMesa -lkvsCore \
++        -L${KVS_OSMESA_DIR}/lib/x86_64-linux-gnu ${KVS_OSMESA_LINK_LIBRARY} \
++        -L$(KVS_LIB_DIR) -lkvs
+
++/* InSitu settings */
 +EXE_INC += -I$(HOME)/Work/Github
 +EXE_LIBS += -L$(HOME)/Work/Github/InSituVis/Lib -lInSituVis
 
 +/* OpenMP settings */
 +EXE_INC += -fopenmp
-+EXE_LIBS += -fopenmpmurase@xrteam04:~/local/OpenFOAM/propeller_pimpleFoam$
++EXE_LIBS += -fopenmp
 ```
-です．
+となります．
 
-OpenGL版の場合には
-comming soon
+次のソルバーの改造です．OralAirFlowVisとほとんど同じですが，Q値の等値面可視化用のプラグインを入れます．
+coming soon....
+
 ## motorBike
