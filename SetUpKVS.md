@@ -201,3 +201,17 @@ $ make
 $ make install
 ```
 エラーが出なければビルド成功です．
+
+## 動作確認
+
+
+# InSituVisの準備
+InSituVisのライブラリを準備してビルドします．
+``` 
+$ cd ~/Work/Github
+$ git clone https://github.com/vizlab-kobe/InSituVis.git
+$ cd InSituVis/Lib
+$ python3 kvsmake.py
+```
+`~/Work/Github/InSituVis/LibにlibInSituVis.a`が生成されていればOKです．
+
