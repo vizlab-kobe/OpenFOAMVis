@@ -225,3 +225,6 @@ $ python3 kvsmake.py
 
 ## OpenFOAMv2412を用いたOralAirFlowVisの可視化
 coming soon..
+
+## OpenFOAMのtutorialの可視化
+coming soon..
