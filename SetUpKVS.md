@@ -1,6 +1,12 @@
 # KVSのビルド
 基本的には[KVS](https://github.com/naohisas/KVS)を参照してください．
 
+## ビルドするライブラリについて
+本ドキュメントはOpenFOAM v2412でin-situ可視化をするための準備として記述しています．以下の順番で各ライブラリをビルドします．依存関係は....
+
+coming soon...
+
+
 ## KVSの入手
 KVSを入手します．
 ``` 
@@ -215,3 +221,7 @@ $ python3 kvsmake.py
 ```
 `~/Work/Github/InSituVis/LibにlibInSituVis.a`が生成されていればOKです．
 
+# 動作確認
+
+## OpenFOAMv2412を用いたOralAirFlowVisの可視化
+coming soon..
