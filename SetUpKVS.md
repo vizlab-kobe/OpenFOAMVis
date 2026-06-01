@@ -131,7 +131,7 @@ $ source ~/.bashrc
 ### OSMesaのビルド
 OSMesa 22.3.7で動作確認済みです．これをビルドするためにはmeson, ninja, makoが必要です．
 ``` 
-$ pip3 install –user meson ninja mako
+$ pip3 install –user meson ninja mako --break-system-packages
 ```
 これらのライブラリが`$HOME/.local`に入るので，`~/.bashrc`にパスを通します．
 ```bash
