@@ -22,7 +22,7 @@ $ cd OpenFOAMVis/propeller/propeller_pimpleFoam
 $ cp Make/option_osmesa Make/option
 $ wclean && wmake
 ```
-として下さい．以上の操作でin-situ可視化に対応したpropeller解析用の非定常非圧縮ソルバー'propeller_pimpleFoam'がビルドされます．
+として下さい．以上の操作でin-situ可視化に対応したpropeller解析用の非定常非圧縮ソルバー`propeller_pimpleFoam`がビルドされます．
 
 さらにpropeller解析ディレクトリに移動して解析を実行します．
 ```
