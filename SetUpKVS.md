@@ -108,17 +108,9 @@ $ git checkout llvmorg-15.0.7
 ```
 $ mkdir build
 $ cd build
-$ cmake -G Ninja -DCMAKE_INSTALL_PREFIX=$HOME/local/llvm-15.0.7 \  
--DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_RTTI=ON \  
--DLLVM_BUILD_LLVM_DYLIB=ON -DLLVM_LINK_LLVM_DYLIB=ON \  
--DLLVM_TARGETS_TO_BUILD="X86" \
-../llvm
+$ cmake -G Ninja -DCMAKE_INSTALL_PREFIX=$HOME/local/llvm-15.0.7 -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_RTTI=ON -DLLVM_BUILD_LLVM_DYLIB=ON -DLLVM_LINK_LLVM_DYLIB=ON -DLLVM_TARGETS_TO_BUILD="X86" ../llvm
 ```
-を実行します．なお`-DLLVM_TARGETS_TO_BUILD="X86"`の部分については，各自の環境に合わせた設定が必要です．terminalで
-``` 
-uname -m
-```
-のコマンドで確認して下さい．
+を実行します．
 
 cmakeが無事に終了した後
 ``` 
