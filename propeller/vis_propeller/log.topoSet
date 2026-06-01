@@ -1,0 +1,54 @@
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2412                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+Build  : _8dbc61e11c-20241220 OPENFOAM=2412 version=v2412
+Arch   : "LSB;label=32;scalar=64"
+Exec   : topoSet -dict system/createInletOutletSets.topoSetDict
+Date   : May 26 2026
+Time   : 12:58:48
+Host   : xrteam04
+PID    : 12333
+I/O    : uncollated
+Case   : /mnt/hdd1/murase/local/calc/foam_tutorial/incompressible/pimpleFoam/RAS/vis_propeller
+nProcs : 1
+trapFpe: Floating point exception trapping enabled (FOAM_SIGFPE).
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster (fileModificationSkew 5, maxFileModificationPolls 20)
+allowSystemOperations : Allowing user-supplied system call operations
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Create time
+
+Create polyMesh for time = 0
+
+Reading createInletOutletSets.topoSetDict
+
+Time = 0
+    mesh not changed.
+Created faceSet boundaryFaces
+    Applying source patchToFace
+    Adding all faces of patches: (outerCylinder) ...
+    Found matching patch outerCylinder with 1404 faces
+    faceSet boundaryFaces now size 1404
+Created faceSet outletFaces
+    Applying source faceToFace
+    Adding all elements of face sets: (boundaryFaces)
+    faceSet outletFaces now size 1404
+Created faceSet inletFaces
+    Applying source faceToFace
+    Adding all elements of face sets: (boundaryFaces)
+    faceSet inletFaces now size 1404
+Read set faceSet outletFaces size:1404
+    Applying source normalToFace
+    Adding faces according to normal being aligned with (0 -1 0) (to within 0.3) ...
+    faceSet outletFaces now size 112
+Read set faceSet inletFaces size:1404
+    Applying source normalToFace
+    Adding faces according to normal being aligned with (0 1 0) (to within 0.3) ...
+    faceSet inletFaces now size 652
+
+End
+

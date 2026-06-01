@@ -1,0 +1,89 @@
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2412                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+Build  : _8dbc61e11c-20241220 OPENFOAM=2412 version=v2412
+Arch   : "LSB;label=32;scalar=64"
+Exec   : createPatch -overwrite
+Date   : May 26 2026
+Time   : 12:58:49
+Host   : xrteam04
+PID    : 12334
+I/O    : uncollated
+Case   : /mnt/hdd1/murase/local/calc/foam_tutorial/incompressible/pimpleFoam/RAS/vis_propeller
+nProcs : 1
+trapFpe: Floating point exception trapping enabled (FOAM_SIGFPE).
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster (fileModificationSkew 5, maxFileModificationPolls 20)
+allowSystemOperations : Allowing user-supplied system call operations
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Create time
+
+Create mesh for time = 0
+
+Reading "system/createPatchDict"
+
+
+
+Adding patches to mesh region0
+
+Adding new patch AMI1 from 
+{
+    type            cyclicAMI;
+    matchTolerance  0.0001;
+    neighbourPatch  AMI2;
+    transform       noOrdering;
+    nFaces          0;
+    startFace       0;
+}
+
+Adding new patch AMI2 from 
+{
+    type            cyclicAMI;
+    matchTolerance  0.0001;
+    neighbourPatch  AMI1;
+    transform       noOrdering;
+    nFaces          0;
+    startFace       0;
+}
+
+Adding new patch inlet from 
+{
+    type            patch;
+    nFaces          0;
+    startFace       0;
+}
+
+Adding new patch outlet from 
+{
+    type            patch;
+    nFaces          0;
+    startFace       0;
+}
+
+
+
+
+Repatching mesh region0
+
+Moving faces from patch innerCylinderSmall to patch 7
+Moving faces from patch innerCylinderSmall_slave to patch 8
+Read 652 faces from faceSet inletFaces
+Read 112 faces from faceSet outletFaces
+Doing topology modification to order faces.
+
+Not synchronising points.
+
+Removing patches with no faces in them.
+
+Removed zero-sized patch innerCylinderSmall type wall at position 0
+Removed zero-sized patch innerCylinderSmall_slave type wall at position 1
+
+
+Writing repatched mesh region0 to 0
+
+End
+

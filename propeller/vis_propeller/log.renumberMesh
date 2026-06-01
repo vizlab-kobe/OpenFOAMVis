@@ -1,0 +1,57 @@
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2412                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+Build  : _8dbc61e11c-20241220 OPENFOAM=2412 version=v2412
+Arch   : "LSB;label=32;scalar=64"
+Exec   : renumberMesh -overwrite
+Date   : May 26 2026
+Time   : 12:58:47
+Host   : xrteam04
+PID    : 12331
+I/O    : uncollated
+Case   : /mnt/hdd1/murase/local/calc/foam_tutorial/incompressible/pimpleFoam/RAS/vis_propeller
+nProcs : 1
+trapFpe: Floating point exception trapping enabled (FOAM_SIGFPE).
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster (fileModificationSkew 5, maxFileModificationPolls 20)
+allowSystemOperations : Allowing user-supplied system call operations
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Create time
+
+Create mesh for time = constant
+
+Mesh region0 size: 526004
+Before renumbering
+    band           : 525103
+    profile        : 4.65824e+10
+
+Using renumber-method: CuthillMcKee [default]
+
+Reading fields
+
+After renumbering
+    band           : 12135
+    profile        : 3.11478e+09
+
+Writing mesh to "constant"
+Reading hexRef8 data : cellLevel
+Reading hexRef8 data : pointLevel
+Reading hexRef8 data : level0Edge
+
+Timings:
+    read mesh   : 0.0896379
+    read fields : 0.000252844
+    decompose   : 0
+    cell-cells  : 0
+    renumber    : 0.15072
+    write       : 0.323515
+TotalTime = 0.981652 s
+
+ExecutionTime = 0.74 s  ClockTime = 1 s
+
+End
+

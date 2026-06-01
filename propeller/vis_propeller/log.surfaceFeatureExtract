@@ -1,0 +1,273 @@
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2412                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+Build  : _8dbc61e11c-20241220 OPENFOAM=2412 version=v2412
+Arch   : "LSB;label=32;scalar=64"
+Exec   : surfaceFeatureExtract
+Date   : May 26 2026
+Time   : 12:56:30
+Host   : xrteam04
+PID    : 12329
+I/O    : uncollated
+Case   : /mnt/hdd1/murase/local/calc/foam_tutorial/incompressible/pimpleFoam/RAS/vis_propeller
+nProcs : 1
+trapFpe: Floating point exception trapping enabled (FOAM_SIGFPE).
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster (fileModificationSkew 5, maxFileModificationPolls 20)
+allowSystemOperations : Allowing user-supplied system call operations
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Create time
+
+
+Note: Feature line extraction only valid on closed manifold surfaces
+
+Reading surfaceFeatureExtractDict
+
+Surfaces     : innerCylinderSmall.obj
+Output       : innerCylinderSmall
+Load options : offset
+Write options: writeObj=off writeVTK=off
+
+Statistics:
+Triangles    : 236 in 1 region(s)
+Vertices     : 120
+Bounding Box : (-0.12 -0.08 -0.12) (0.12 0.06 0.12)
+
+Constructing feature set from included angle 150
+Selecting edges based purely on geometric tests: no
+Removing features with number of edges < 10
+
+Initial Feature set:
+    points : 0
+    edges  : 120
+    of which
+        region edges   : 0
+        external edges : 120
+        internal edges : 0
+
+Final Feature set:
+    points : 120
+    of which
+        convex             : 0
+        concave            : 0
+        mixed              : 0
+        non-feature        : 120
+    edges  : 120
+    of which
+        external edges     : 120
+        internal edges     : 0
+        flat edges         : 0
+        open edges         : 0
+        multiply connected : 0
+
+Writing extendedFeatureEdgeMesh to "/mnt/hdd1/murase/local/calc/foam_tutorial/incompressible/pimpleFoam/RAS/vis_propeller/constant/extendedFeatureEdgeMesh/innerCylinderSmall.extendedFeatureEdgeMesh"
+
+Writing featureEdgeMesh to "/mnt/hdd1/murase/local/calc/foam_tutorial/incompressible/pimpleFoam/RAS/vis_propeller/constant/triSurface/innerCylinderSmall.eMesh"
+Surfaces     : outerCylinder.obj
+Output       : outerCylinder
+Load options : offset
+Write options: writeObj=off writeVTK=off
+
+Statistics:
+Triangles    : 196 in 1 region(s)
+Vertices     : 100
+Bounding Box : (-0.3 -0.8 -0.299408) (0.3 0.2 0.299408)
+
+Constructing feature set from included angle 150
+Selecting edges based purely on geometric tests: no
+Removing features with number of edges < 10
+
+Initial Feature set:
+    points : 0
+    edges  : 100
+    of which
+        region edges   : 0
+        external edges : 100
+        internal edges : 0
+
+Final Feature set:
+    points : 100
+    of which
+        convex             : 0
+        concave            : 0
+        mixed              : 0
+        non-feature        : 100
+    edges  : 100
+    of which
+        external edges     : 100
+        internal edges     : 0
+        flat edges         : 0
+        open edges         : 0
+        multiply connected : 0
+
+Writing extendedFeatureEdgeMesh to "/mnt/hdd1/murase/local/calc/foam_tutorial/incompressible/pimpleFoam/RAS/vis_propeller/constant/extendedFeatureEdgeMesh/outerCylinder.extendedFeatureEdgeMesh"
+
+Writing featureEdgeMesh to "/mnt/hdd1/murase/local/calc/foam_tutorial/incompressible/pimpleFoam/RAS/vis_propeller/constant/triSurface/outerCylinder.eMesh"
+Surfaces     : propellerStem1.obj
+Output       : propellerStem1
+Load options : offset
+Write options: writeObj=off writeVTK=off
+
+Statistics:
+Triangles    : 816 in 1 region(s)
+Vertices     : 544
+Bounding Box : (-0.0263952 0.049 -0.0263952) (0.0263951 0.06 0.0263951)
+
+Constructing feature set from included angle 150
+Selecting edges based purely on geometric tests: no
+Removing features with number of edges < 10
+
+Initial Feature set:
+    points : 0
+    edges  : 272
+    of which
+        region edges   : 272
+        external edges : 0
+        internal edges : 0
+
+Final Feature set:
+    points : 272
+    of which
+        convex             : 0
+        concave            : 0
+        mixed              : 0
+        non-feature        : 272
+    edges  : 272
+    of which
+        external edges     : 0
+        internal edges     : 0
+        flat edges         : 0
+        open edges         : 272
+        multiply connected : 0
+
+Writing extendedFeatureEdgeMesh to "/mnt/hdd1/murase/local/calc/foam_tutorial/incompressible/pimpleFoam/RAS/vis_propeller/constant/extendedFeatureEdgeMesh/propellerStem1.extendedFeatureEdgeMesh"
+
+Writing featureEdgeMesh to "/mnt/hdd1/murase/local/calc/foam_tutorial/incompressible/pimpleFoam/RAS/vis_propeller/constant/triSurface/propellerStem1.eMesh"
+Surfaces     : propellerStem2.obj
+Output       : propellerStem2
+Load options : offset
+Write options: writeObj=off writeVTK=off
+
+Statistics:
+Triangles    : 1360 in 1 region(s)
+Vertices     : 816
+Bounding Box : (-0.0263953 0.06 -0.0263953) (0.0263948 0.1 0.0263948)
+
+Constructing feature set from included angle 150
+Selecting edges based purely on geometric tests: no
+Removing features with number of edges < 10
+
+Initial Feature set:
+    points : 0
+    edges  : 272
+    of which
+        region edges   : 272
+        external edges : 0
+        internal edges : 0
+
+Final Feature set:
+    points : 272
+    of which
+        convex             : 0
+        concave            : 0
+        mixed              : 0
+        non-feature        : 272
+    edges  : 272
+    of which
+        external edges     : 0
+        internal edges     : 0
+        flat edges         : 0
+        open edges         : 272
+        multiply connected : 0
+
+Writing extendedFeatureEdgeMesh to "/mnt/hdd1/murase/local/calc/foam_tutorial/incompressible/pimpleFoam/RAS/vis_propeller/constant/extendedFeatureEdgeMesh/propellerStem2.extendedFeatureEdgeMesh"
+
+Writing featureEdgeMesh to "/mnt/hdd1/murase/local/calc/foam_tutorial/incompressible/pimpleFoam/RAS/vis_propeller/constant/triSurface/propellerStem2.eMesh"
+Surfaces     : propellerStem3.obj
+Output       : propellerStem3
+Load options : offset
+Write options: writeObj=off writeVTK=off
+
+Statistics:
+Triangles    : 1632 in 1 region(s)
+Vertices     : 952
+Bounding Box : (-0.0263926 0.1 -0.0263926) (0.0263916 0.2 0.0263916)
+
+Constructing feature set from included angle 150
+Selecting edges based purely on geometric tests: no
+Removing features with number of edges < 10
+
+Initial Feature set:
+    points : 0
+    edges  : 272
+    of which
+        region edges   : 272
+        external edges : 0
+        internal edges : 0
+
+Final Feature set:
+    points : 272
+    of which
+        convex             : 0
+        concave            : 0
+        mixed              : 0
+        non-feature        : 272
+    edges  : 272
+    of which
+        external edges     : 0
+        internal edges     : 0
+        flat edges         : 0
+        open edges         : 272
+        multiply connected : 0
+
+Writing extendedFeatureEdgeMesh to "/mnt/hdd1/murase/local/calc/foam_tutorial/incompressible/pimpleFoam/RAS/vis_propeller/constant/extendedFeatureEdgeMesh/propellerStem3.extendedFeatureEdgeMesh"
+
+Writing featureEdgeMesh to "/mnt/hdd1/murase/local/calc/foam_tutorial/incompressible/pimpleFoam/RAS/vis_propeller/constant/triSurface/propellerStem3.eMesh"
+Surfaces     : propellerTip.obj
+Output       : propellerTip
+Load options : offset
+Write options: writeObj=off writeVTK=off
+
+Statistics:
+Triangles    : 33432 in 1 region(s)
+Vertices     : 16785
+Bounding Box : (-0.0974567 -0.061 -0.0974567) (0.0974567 0.049 0.0974616)
+
+Constructing feature set from included angle 150
+Selecting edges based purely on geometric tests: no
+Removing features with number of edges < 10
+
+Initial Feature set:
+    points : 24
+    edges  : 1236
+    of which
+        region edges   : 136
+        external edges : 1092
+        internal edges : 8
+
+Final Feature set:
+    points : 1240
+    of which
+        convex             : 16
+        concave            : 0
+        mixed              : 8
+        non-feature        : 1216
+    edges  : 1236
+    of which
+        external edges     : 1092
+        internal edges     : 8
+        flat edges         : 0
+        open edges         : 136
+        multiply connected : 0
+
+Writing extendedFeatureEdgeMesh to "/mnt/hdd1/murase/local/calc/foam_tutorial/incompressible/pimpleFoam/RAS/vis_propeller/constant/extendedFeatureEdgeMesh/propellerTip.extendedFeatureEdgeMesh"
+
+Writing featureEdgeMesh to "/mnt/hdd1/murase/local/calc/foam_tutorial/incompressible/pimpleFoam/RAS/vis_propeller/constant/triSurface/propellerTip.eMesh"
+ExecutionTime = 0.05 s  ClockTime = 0 s
+
+End
+
