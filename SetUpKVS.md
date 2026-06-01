@@ -82,6 +82,8 @@ $ make
 $ make install
 ```
 エラーが出なければビルド成功です．
+### 動作確認
+coming soon...
 
 ## OSMesa版のKVSのビルド
 
@@ -167,8 +169,12 @@ KVSでOSMesaを使用するため，以下を`~/.bashrc`に追加します．
 export LLVM_CONFIG=$LLVM_PATH/bin/llvm-config
 export KVS_OSMESA_DIR=$HOME/local/osmesa_22.3.7
 export KVS_OSMESA_LINK_LIBRARY=“-lOSMesa –lz $($LLVM_CONFIG --ldflags) $($LLVM_CONFIG --libs all) $($LLVM_CONFIG --system-libs) –lrt –ldl –lpthread –lm”
-export LD_LIBRARY_PATH=$HOME/local/osmesa_22.3.7/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
 ```
+ターミナルに戻り環境変数を反映します．
+```
+$ source ~/.bashrc
+```
+
 ### OSMesa版のKVSのビルド
 KVSディレクトリに移動します．
 ``` 
@@ -201,7 +207,7 @@ $ make install
 ```
 エラーが出なければビルド成功です．
 
-## 動作確認
+### 動作確認
 
 
 # InSituVisの準備
@@ -214,10 +220,4 @@ $ python3 kvsmake.py
 ```
 `~/Work/Github/InSituVis/LibにlibInSituVis.a`が生成されていればOKです．
 
-# 動作確認
 
-## OpenFOAMv2412を用いたOralAirFlowVisの可視化
-coming soon..
-
-## OpenFOAMのtutorialの可視化
-coming soon..
