@@ -105,7 +105,9 @@ $ cd llvm-project
 $ git checkout llvmorg-15.0.7
 ```
 さらに
-``` 
+```
+$ mkdir build
+$ cd build
 $ cmake -G Ninja -DCMAKE_INSTALL_PREFIX=$HOME/local/llvm-15.0.7 \  
 -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_RTTI=ON \  
 -DLLVM_BUILD_LLVM_DYLIB=ON -DLLVM_LINK_LLVM_DYLIB=ON \  
