@@ -114,7 +114,7 @@ $ cmake -G Ninja -DCMAKE_INSTALL_PREFIX=$HOME/local/llvm-15.0.7 -DCMAKE_BUILD_TY
 
 cmakeが無事に終了した後
 ``` 
-$ ninja -j
+$ ninja
 $ ninja install
 ```
 正常に終了後，`~/.bashrc`に以下の内容を追加しておきます．
