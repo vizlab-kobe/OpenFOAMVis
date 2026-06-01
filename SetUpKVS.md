@@ -91,7 +91,7 @@ llvmをビルドするのに必要です．terminalで以下の通り入力し�
 $ cd ~/Work/Github
 $ git clone https://github.com/ninja-build/ninja.git
 $ cd ninja
-$ python3 configure.py –bootstrap
+$ python3 configure.py –-bootstrap
 $ cp ninja $HOME/local/cmake-3.27.9/bin
 ```
 
