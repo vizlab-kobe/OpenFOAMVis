@@ -230,6 +230,6 @@ $ git clone https://github.com/vizlab-kobe/InSituVis.git
 $ cd InSituVis/Lib
 $ python3 kvsmake.py
 ```
-`~/Work/GitHub/InSituVis/LibにlibInSituVis.a`が生成されていればOKです．
+`~/Work/GitHub/InSituVis/Lib`に`libInSituVis.a`が生成されていればOKです．
 
 
