@@ -99,7 +99,7 @@ export LD_LIBRARY_PATH="$HOME/local/gcc-11.4.0/lib64:$HOME/local/gcc-11.4.0/lib:
 ### ninjaの準備
 llvmをビルドするのに必要です．terminalで以下の通り入力します．最終的にcmakeのライブラリに格納します．
 ``` 
-$ cd ~/Work/Github
+$ cd ~/Work/GitHub
 $ git clone https://github.com/ninja-build/ninja.git
 $ cd ninja
 $ python3 configure.py –-bootstrap
@@ -110,7 +110,7 @@ $ cp ninja $HOME/local/cmake-3.27.9/bin
 OSMesaを使用する際に，llvmpipeを使って高速可視化を実現します．15.0.7で動作確認済みです．
 terminalで以下のコマンドを入力します．
 ``` 
-$ cd ~/Work/Github
+$ cd ~/Work/GitHub
 $ git clone https://github.com/llvm/llvm-project.git
 $ cd llvm-project
 $ git checkout llvmorg-15.0.7
@@ -150,7 +150,7 @@ export PATH=$HOME/.local/bin:$PATH
 ```
 再びterminalでOSMesaを取得します．
 ``` 
-$ cd ~/Work/Github
+$ cd ~/Work/GitHub
 $ wget https://archive.mesa3d.org/older-versions/22.x/mesa-22.3.7.tar.xz
 $ tar –xvf mesa-22.3.7.tar.xz
 $ cd mesa-22.3.7
@@ -222,11 +222,11 @@ $ make install
 # InSituVisの準備
 InSituVisのライブラリを準備してビルドします．
 ``` 
-$ cd ~/Work/Github
+$ cd ~/Work/GitHub
 $ git clone https://github.com/vizlab-kobe/InSituVis.git
 $ cd InSituVis/Lib
 $ python3 kvsmake.py
 ```
-`~/Work/Github/InSituVis/LibにlibInSituVis.a`が生成されていればOKです．
+`~/Work/GitHub/InSituVis/LibにlibInSituVis.a`が生成されていればOKです．
 
 
