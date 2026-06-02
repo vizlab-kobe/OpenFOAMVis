@@ -193,7 +193,7 @@ $ tar -xvf qt-everywhere-src-5.12.11.tar.xz
 $ mv qt-everywhere-src-5.12.11 qt-everywhere-opensource-src-5.12.11 
 ```
 
-`../OpenFOAM-v2412/etc/config.sh/compiler`を以下のように書き換えます．`gcc`の場ジョンはterminalで`gcc --version`で確認して下さい．
+`../OpenFOAM-v2412/etc/config.sh/compiler`を以下のように書き換えます．`gcc`のバージョンはterminalで`gcc --version`で確認して下さい．
 ```bash
 62: default_gcc_version=gcc-10.5.0
 ...
@@ -206,9 +206,18 @@ OpenFOAMの`bashrc`を読み込みます．
 ``` 
 $. ~/Work/GitHub/OpenFOAM-v2412/etc/bashrc
 ```
-### 必要なライブラリのビルド
-CGALのビルドを行います．CGALはsnappyhexMeshなど，解析をするためのメッシュ切りの際に必要です．
-可視化にはそれほど重要では有りませんので，必要がなければ飛ばしてOKです．
+この時点ではまだコンパイルしていないので，警告が表示されますが無視してOKです．
+
+### ThridParty内の必要なライブラリのビルド
+ここでは以下のライブラリをビルドします．
+- gmp
+- mpfr
+- CGAL
+
+これらは依存関係があります．必ず`gmp`→`mpfr`→`CGAL`の順番にビルドして下さい．
+
+※CGALはsnappyhexMeshなど，解析をするためのメッシュ切りの際に必要です．可視化にはそれほど重要では有りませんので，必要がなければ飛ばしてOKです．
+
 まずgmpのビルドを行います．
 ``` 
 $ cd ~/Work/GitHub/ThirdParty-v2412/gmp-6.2.0
