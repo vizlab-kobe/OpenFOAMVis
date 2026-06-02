@@ -152,7 +152,7 @@ $ tar –xvf m4-1.4.19.tar.gz
 $ cd m4-1.4.19
 $ mkdir build
 $ cd build
-$ ../configure –-prefix=$HOME/local/m4-1.4.19
+$ ../configure --prefix=$HOME/local/m4-1.4.19
 $ make –j
 $ make install
 ```
