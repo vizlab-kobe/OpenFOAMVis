@@ -87,6 +87,15 @@ coming soon...
 
 ## OSMesa版のKVSのビルド
 
+### gccの注意
+gccを独自にビルドした環境において，condaなどの他のライブラリも共存している場合`~/.bashrc`において
+```
+export PATH="$HOME/local/gcc-11.4.0/bin:$PATH"
+export LD_LIBRARY_PATH="$HOME/local/gcc-11.4.0/lib64:$HOME/local/gcc-11.4.0/lib:$LD_LIBRARY_PATH"
+```
+は最下部に記述します．
+
+
 ### ninjaの準備
 llvmをビルドするのに必要です．terminalで以下の通り入力します．最終的にcmakeのライブラリに格納します．
 ``` 
@@ -110,7 +119,7 @@ $ git checkout llvmorg-15.0.7
 ```
 $ mkdir build
 $ cd build
-$ cmake -G Ninja -DCMAKE_INSTALL_PREFIX=$HOME/local/llvm-15.0.7 -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_RTTI=ON -DLLVM_BUILD_LLVM_DYLIB=ON -DLLVM_LINK_LLVM_DYLIB=ON -DLLVM_TARGETS_TO_BUILD="X86" ../llvm
+$ CC=gcc CXX=g++ cmake -G Ninja -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_INSTALL_PREFIX=$HOME/local/llvm-15.0.7 -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_RTTI=ON -DLLVM_BUILD_LLVM_DYLIB=ON -DLLVM_LINK_LLVM_DYLIB=ON -DLLVM_TARGETS_TO_BUILD="X86" ../llvm
 ```
 を実行します．
 
@@ -148,7 +157,7 @@ $ cd mesa-22.3.7
 ```
 以下のコマンドでビルドします．
 ``` 
-$ meson setup build \
+$ CC=gcc CXX=g++ meson setup build \
   --prefix=$HOME/local/osmesa_22.3.7 \
   --buildtype=release \
   -Dosmesa=true \
