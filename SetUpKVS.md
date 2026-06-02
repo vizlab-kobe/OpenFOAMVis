@@ -90,7 +90,9 @@ $ kvsmake
 - ninja
 - llvm
 - osmesa
-をビルドします．必ず`ninja`→`llvm`→`osmesa`の順番にビルドして下さい．
+をビルドします．
+
+これらは依存関係があります．必ず`ninja`→`llvm`→`osmesa`の順番にビルドして下さい．
 
 ### ninjaの準備
 `llvm`をビルドするのに必要です．terminalで以下の通り入力します．最終的にcmakeのライブラリに格納します．
@@ -117,7 +119,7 @@ $ mkdir build
 $ cd build
 $ CC=gcc CXX=g++ cmake -G Ninja -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_INSTALL_PREFIX=$HOME/local/llvm-15.0.7 -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_RTTI=ON -DLLVM_BUILD_LLVM_DYLIB=ON -DLLVM_LINK_LLVM_DYLIB=ON -DLLVM_TARGETS_TO_BUILD="X86" ../llvm
 ```
-を実行します．
+を実行します．先ほどビルドした`ninja`を使用しています．
 
 cmakeが無事に終了した後
 ``` 
@@ -136,7 +138,7 @@ $ source ~/.bashrc
 ```
 
 ### OSMesaのビルド
-OSMesa 22.3.7で動作確認済みです．これをビルドするためには`meson`, `ninja`, `mako`が必要です．
+OSMesa 22.3.7で動作確認済みです．これをビルドするためには`meson`, `ninja`, `mako`が必要です．次のコマンドで取得可能です：
 ``` 
 $ pip3 install --user meson ninja mako --break-system-packages
 ```
