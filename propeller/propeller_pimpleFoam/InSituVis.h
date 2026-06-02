@@ -192,17 +192,13 @@ public:
             //BaseClass::screen().registerObject( object, new kvs::Bounds() );
             //object->setVisible( Params::VisibleBoundingBox );
 
-
-            // オブジェクト自体は可視状態（ルートランクのみ）にする
             object->setVisible( visible );
 
-            // バウンディングボックスを表示する場合のみ Bounds レンダラーを登録
             if ( Params::VisibleBoundingBox )
               {
                 BaseClass::screen().registerObject( object, new kvs::Bounds() );
               }
 
-            // 境界メッシュを表示する場合、ここで PolygonRenderer を登録しておく
             if ( Params::VisibleBoundaryMesh )
               {
                 auto* renderer = new kvs::PolygonRenderer();
@@ -216,19 +212,13 @@ public:
         auto* mesh = kvs::PolygonObject::DownCast( BaseClass::screen().scene()->object( "BoundaryMesh" ) );
         if ( mesh )
           {
-            // --- dynamicMeshDict の設定値 ---
             const double omega = 158.0;          // omega [rad/s]
-            const kvs::Vec3 axis( 0, 1, 0 );     // axis (Y軸)
+            const kvs::Vec3 axis( 0, 1, 0 );     // axis
 
-            // --- 角度計算 ---
-            // KVSの回転行列は「度(degree)」を要求するため変換します
-            // 角度[deg] = omega[rad/s] * 時間[s] * (180 / PI)
             double angle_deg = ( omega * sim_time.value ) * ( 180.0 / kvs::Math::PI() );
 
-            // --- 回転行列の適用 ---
             kvs::Matrix33f R = kvs::Matrix33f::Rotation( axis, angle_deg );
 
-            //mesh->setRotation( R );
             kvs::Xform xform = mesh->xform();
 
             kvs::Xform new_xform( xform.translation(), xform.scaling(), R );

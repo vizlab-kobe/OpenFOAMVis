@@ -1,0 +1,70 @@
+Authorization required, but no authorization protocol specified
+
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2412                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+Build  : _8dbc61e11c-20241220 OPENFOAM=2412 version=v2412
+Arch   : "LSB;label=32;scalar=64"
+Exec   : renumberMesh -parallel -overwrite
+Date   : Jun 03 2026
+Time   : 00:26:30
+Host   : xrteam04
+PID    : 654478
+I/O    : uncollated
+Case   : /home/murase/Work/GitHub/OpenFOAMVis/motorBike/motorBike/motorBike
+nProcs : 8
+Hosts  :
+(
+    (xrteam04 8)
+)
+Pstream initialized with:
+    floatTransfer      : false
+    maxCommsSize       : 0
+    nProcsSimpleSum    : 0
+    nonBlockingExchange: 0 (tuning: 0)
+    exchange algorithm : 0
+    commsType          : nonBlocking
+    polling iterations : 0
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster (fileModificationSkew 5, maxFileModificationPolls 20)
+allowSystemOperations : Allowing user-supplied system call operations
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Create time
+
+Create mesh for time = 0
+
+Mesh region0 size: 3234419
+Before renumbering
+    band           : 416027
+    profile        : 1.13902e+11
+
+Using renumber-method: CuthillMcKee [default]
+
+Reading fields
+    volScalarField: k nuTilda nut p
+    volVectorField: U
+
+After renumbering
+    band           : 19165
+    profile        : 2.94065e+10
+
+Writing mesh to "constant"
+
+Timings:
+    read mesh   : 1.42124
+    read fields : 0.0406295
+    decompose   : 0
+    cell-cells  : 0
+    renumber    : 0.132175
+    write       : 3.97578
+TotalTime = 6.50992 s
+
+ExecutionTime = 6.63 s  ClockTime = 7 s
+
+End
+
+Finalising parallel run
