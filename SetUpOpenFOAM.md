@@ -13,14 +13,18 @@
 ## OpenFOAM v2412 の環境構築
 以下のライブラリを後述の通り準備します．
 - gcc
+- m4
+- bison
 - cmake
 - openmpi
 - zlib
 - flex
-- m4
-- bison
 
 その後，OpenFOAM ThirdParty，およびOpenFOAM本体のビルドをします．
+
+この内，`bison`をビルドするのに`m4`を使用します．必ず`m4`→`bison`の順番でビルドして下さい．
+
+`cmake`, `openmpi`, `zlib`, `flex`はどの順番でもOKですが，すべて`OpenFOAM`のビルドに必要です．
 
 ### gccの確認（検証中）
 - gcc-7.5.0, gcc-10.5.0，およびgcc-11.4.0にて動作確認済みです．
@@ -31,6 +35,45 @@
 $ gcc --version
 gcc (Ubuntu 11.4.0-1ubuntu1~22.04.3) ll.4.0
 ...
+```
+
+
+### m4のビルド
+OpenFOAM ThirdPartyであるgmpのビルドに必要です．1.4.18, 19で動作確認済みです．Ubuntu 22.04 LTS等の新しい環境では1.4.18以下のバージョンはコンパイル時にエラーが発生するようです．その場合には1.4.19以上のバージョンを使って下さい．terminalで以下のコマンドを入力します．
+``` 
+$ cd ~/Work/Github
+$ wget https://ftp.gnu.org/gnu/m4/m4-1.4.19.tar.gz
+$ tar -xvf m4-1.4.19.tar.gz
+$ cd m4-1.4.19
+$ mkdir build
+$ cd build
+$ ../configure --prefix=$HOME/local/m4-1.4.19
+$ make -j
+$ make install
+```
+
+成功後，`~/.bashrc`に以下を追加します．
+```bash
+export PATH=$HOME/local/m4-1.4.19/bin:$PATH 
+```
+
+terminalに戻って`~/.bashrc`を読み込みます．次にビルドする`bison`が`m4`を用いてビルドされます．
+``` 
+source ~/.bashrc
+```
+
+### bisonのビルド
+bisonをビルドします．bisonは数式をC++ (OpenFOAM) 向けに読み取るライブラリです．先ほど使用した`m4`を使用します．
+``` 
+$ cd ~/Work/Github 
+$ wget https://ftp.gnu.org/gnu/bison/bison-3.8.2.tar.gz 
+$ tar -xvf bison-3.8.2.tar.gz
+$ cd bison-3.8.2 
+$ mkdir build
+$ cd build
+$ ../configure --prefix=$HOME/local/bison-3.8.2 
+$ make -j 
+$ make install
 ```
 
 ### cmakeのビルド
@@ -45,17 +88,6 @@ $ cd build
 $ ../bootstrap --prefix=$HOME/local/cmake-3.27.9
 $ make -j
 $ make install
-```
-
-make installまで終了後，`~/.bashrc`にパスを記述する必要があります．
-以下の内容を`~/.bashrc`の末尾に記述しておきます．
-```bash
-export PATH=$HOME/local/cmake-3.27.9/bin:$PATH
-```
-
-terminalに戻って`~/.bashrc`を読み込みます．
-``` 
-$ source ~/.bashrc
 ```
 
 ### openmpiのビルド
@@ -73,17 +105,6 @@ $ make -j
 $ make install
 ```
 
-成功後，`~/.bashrc`に以下を追加します．コンパイラ (gcc/g++)がopenmpiを見つけられるようにします．
-```bash
-export MPI_PATH=$HOME/local/openmpi-4.1.2
-export PATH=$MPI_PATH/bin:$PATH
-export LD_LIBRARY_PATH=$MPI_PATH/lib:$LD_LIBRARY_PATH
-```
-
-terminalに戻って`~/.bashrc`を読み込みます．
-```bash
-source ~/.bashrc
-```
 
 ### zlibのビルド
 zlibをビルドします．zlibはOpenFOAM形式の圧縮ファイルの処理に必要です．
@@ -97,19 +118,6 @@ $ cd build
 $ ../configure --prefix=$HOME/local/zlib-1.3.1
 $ make -j
 $ make install
-```
-
-成功後，`~/.bashrc`に以下を追加します．コンパイラ (gcc/g++)がzlibを見つけられるようにします．
-```bash
-export ZLIB_DIR=$HOME/local/zlib-1.3.1
-export CPATH=$ZLIB_DIR/include:$CPATH
-export LIBRARY_PATH=$ZLIB_DIR/lib:$LIBRARY_PATH
-export LD_LIBRARY_PATH=$ZLIB_DIR/lib:$LD_LIBRARY_PATH
-```
-
-terminalに戻って`~/.bashrc`を読み込みます．
-``` 
-source ~/.bashrc
 ```
 
 ### flexのビルド
@@ -132,10 +140,17 @@ $ ../configure --prefix=$HOME/local/flex-2.6.4 CFLAGS="-D_GNU_SOURCE" ac_cv_func
 ```
 としてください．glibcのバージョンは```ldd --version```で確認可能です．
 
-成功後，`~/.bashrc`に以下を追加します．コンパイラ (gcc/g++)がflexを見つけられるようにします．
+`bison`, `cmake`, `openmpi`, `zlib`，`flex`のビルドが終了したら，`~/.bashrc`に以下を追加します．コンパイラ (gcc/g++)が各ライブラリを見つけられるようにします．
 ```bash
-export PATH=$HOME/local/flex-2.6.4/bin:$PATH
-export CPATH=$HOME/local/flex-2.6.4/include:$CPATH
+export MPI_PATH=$HOME/local/openmpi-4.1.2
+export ZLIB_DIR=$HOME/local/zlib-1.3.1
+
+export PATH=$HOME/local/bison-3.8.2/bin:$HOME/local/cmake-3.27.9/bin:$MPI_PATH/bin:$HOME/local/flex-2.6.4/bin:$PATH
+
+export LD_LIBRARY_PATH=$MPI_PATH/lib:$ZLIB_DIR/lib:$LD_LIBRARY_PATH
+export LIBRARY_PATH=$ZLIB_DIR/lib:$LIBRARY_PATH
+
+export CPATH=$ZLIB_DIR/include:$HOME/local/flex-2.6.4/include:$CPATH
 ```
 
 terminalに戻って`~/.bashrc`を読み込みます．
@@ -143,53 +158,6 @@ terminalに戻って`~/.bashrc`を読み込みます．
 source ~/.bashrc
 ```
 
-### m4のビルド
-OpenFOAM ThirdPartyであるgmpのビルドに必要です．1.4.18, 19で動作確認済みです．Ubuntu 22.04 LTS等の新しい環境では1.4.18以下のバージョンはコンパイル時にエラーが発生するようです．その場合には1.4.19以上のバージョンを使って下さい．terminalで以下のコマンドを入力します．
-``` 
-$ cd ~/Work/Github
-$ wget https://ftp.gnu.org/gnu/m4/m4-1.4.19.tar.gz
-$ tar -xvf m4-1.4.19.tar.gz
-$ cd m4-1.4.19
-$ mkdir build
-$ cd build
-$ ../configure --prefix=$HOME/local/m4-1.4.19
-$ make -j
-$ make install
-```
-
-成功後，`~/.bashrc`に以下を追加します．
-```bash
-export PATH=$HOME/local/m4-1.4.19/bin:$PATH 
-```
-
-terminalに戻って`~/.bashrc`を読み込みます．
-``` 
-source ~/.bashrc
-```
-
-### bisonのビルド
-bisonをビルドします．bisonは数式をC++ (OpenFOAM) 向けに読み取るライブラリです．
-``` 
-$ cd ~/Work/Github 
-$ wget https://ftp.gnu.org/gnu/bison/bison-3.8.2.tar.gz 
-$ tar -xvf bison-3.8.2.tar.gz
-$ cd bison-3.8.2 
-$ mkdir build
-$ cd build
-$ ../configure --prefix=$HOME/local/bison-3.8.2 
-$ make -j 
-$ make install
-```
-
-成功後，`~/.bashrc`に以下を追加します．コンパイラ (gcc/g++)がflexを見つけられるようにします．
-```bash
-export PATH=$HOME/local/bison-3.8.2/bin:$PATH 
-```
-
-terminalに戻って`~/.bashrc`を読み込みます．
-```bash
-source ~/.bashrc
-```
 
 ## OpenFOAMの準備
 - ESI版のv2412を使用します．
