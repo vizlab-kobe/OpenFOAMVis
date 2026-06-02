@@ -195,7 +195,6 @@ $ mv qt-everywhere-src-5.12.11 qt-everywhere-opensource-src-5.12.11
 
 `../OpenFOAM-v2412/etc/config.sh/compiler`を以下のように書き換えます．
 ```bash
-61: default_clang_version=llvm-15.0.7
 62: default_gcc_version=gcc-10.5.0
 ...
 64: default_gmp_version=gmp-6.2.0
