@@ -83,7 +83,7 @@ $ cd ~/Work/GitHub/KVS/Example/SupportEGL/Hello
 $ kvsmake -G
 $ kvsmake
 ```
-これにより`output_0??.bmp`が11枚出力されます．
+これにより`output_0??.bmp`が11枚出力されます．InSituVisの準備の項へ進んで下さい．
 
 ## OSMesa版のKVSのビルド
 ここでは
@@ -222,7 +222,7 @@ $ cd ~/Work/GitHub/KVS/Example/SupportOSMesa/Hello
 $ kvsmake -G
 $ kvsmake
 ```
-これにより`output_0??.bmp`が11枚出力されます．
+これにより`output_0??.bmp`が11枚出力されます．InSituVisの準備の項へ進んで下さい．
 
 
 # InSituVisの準備
