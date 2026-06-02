@@ -13,116 +13,124 @@
 ## OpenFOAM v2412 の環境構築
 以下のライブラリを後述の通り準備します．
 - gcc
+- m4
+- bison
 - cmake
 - openmpi
 - zlib
 - flex
-- m4
-- bison
 
 その後，OpenFOAM ThirdParty，およびOpenFOAM本体のビルドをします．
 
-### gccの確認
+この内，`bison`をビルドするのに`m4`を使用します．必ず`m4`→`bison`の順番でビルドして下さい．
+
+`cmake`, `openmpi`, `zlib`, `flex`はどの順番でもOKですが，すべて`OpenFOAM`のビルドに必要です．
+
+### gccの確認（検証中）
 - gcc-7.5.0, gcc-10.5.0，およびgcc-11.4.0にて動作確認済みです．
 - Ubuntu 22.04 LTSにはgcc-11.4.0がプリセットされています．そのまま使用することができます．
-- Ubuntu 24.04 LTSにプリセットされているgcc 13では動作確認をしていません．11.4.0を導入して下さい．
+- Ubuntu 24.04 LTSにプリセットされているgcc 13では動作確認をしていません．
+- 自前環境に独自ビルドしたgccを使用すると，OSMesaを準備する際のllvmのビルドの段階で，システムのgccと競合することがあるようです．できるだけシステムに予めビルドされているgccを使用して下さい（検証中）．
 ``` 
 $ gcc --version
 gcc (Ubuntu 11.4.0-1ubuntu1~22.04.3) ll.4.0
 ...
 ```
 
-### cmakeのビルド
-llvm，およびOpenFOAMをビルドするのに必要です．3.27.9で動作確認済みです．
+
+### m4のビルド
+OpenFOAM ThirdPartyであるgmpのビルドに必要です．1.4.18, 19で動作確認済みです．Ubuntu 22.04 LTS等の新しい環境では1.4.18以下のバージョンはコンパイル時にエラーが発生するようです．その場合には1.4.19以上のバージョンを使って下さい．terminalで以下のコマンドを入力します．
 ``` 
-$ cd ~/Work/Github
-$ wget https://github.com/Kitware/CMake/releases/download/v3.27.9/cmake-3.27.9.tar.gz
-$ tar –xvf cmake-3.27.9.tar.gz
-$ cd cmake-3.27.9
+$ cd ~/Work/GitHub
+$ wget https://ftp.gnu.org/gnu/m4/m4-1.4.19.tar.gz
+$ tar -xvf m4-1.4.19.tar.gz
+$ cd m4-1.4.19
 $ mkdir build
 $ cd build
-$ ../bootstrap -–prefix=$HOME/local/cmake-3.27.9
-$ make –j
+$ ../configure --prefix=$HOME/local/m4-1.4.19
+$ make -j
 $ make install
 ```
 
-make installまで終了後，`~/.bashrc`にパスを記述する必要があります．
-以下の内容を`~/.bashrc`の末尾に記述しておきます．
+成功後，`~/.bashrc`に以下を追加します．
 ```bash
-export PATH=$HOME/local/cmake-3.27.9/bin:$PATH
+export PATH=$HOME/local/m4-1.4.19/bin:$PATH 
 ```
 
-terminalに戻って`~/.bashrc`を読み込みます．
+terminalに戻って`~/.bashrc`を読み込みます．次にビルドする`bison`が`m4`を用いてビルドされます．
 ``` 
-$ source ~/.bashrc
+source ~/.bashrc
+```
+
+### bisonのビルド
+bisonをビルドします．bisonは数式をC++ (OpenFOAM) 向けに読み取るライブラリです．先ほど使用した`m4`を使用します．
+``` 
+$ cd ~/Work/GitHub 
+$ wget https://ftp.gnu.org/gnu/bison/bison-3.8.2.tar.gz 
+$ tar -xvf bison-3.8.2.tar.gz
+$ cd bison-3.8.2 
+$ mkdir build
+$ cd build
+$ ../configure --prefix=$HOME/local/bison-3.8.2 
+$ make -j 
+$ make install
+```
+
+### cmakeのビルド
+llvm，およびOpenFOAMをビルドするのに必要です．3.27.9で動作確認済みです．
+``` 
+$ cd ~/Work/GitHub
+$ wget https://GitHub.com/Kitware/CMake/releases/download/v3.27.9/cmake-3.27.9.tar.gz
+$ tar -xvf cmake-3.27.9.tar.gz
+$ cd cmake-3.27.9
+$ mkdir build
+$ cd build
+$ ../bootstrap --prefix=$HOME/local/cmake-3.27.9
+$ make -j
+$ make install
 ```
 
 ### openmpiのビルド
 並列計算に必要です．OpenFOAMのビルド前にインストールしておく必要があります．
 4.1.2で動作確認済みです．terminalで以下のコマンドを入力します．
 ``` 
-$ cd ~/Work/Github
+$ cd ~/Work/GitHub
 $ wget https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.2.tar.gz
 $ tar -xvf openmpi-4.1.2.tar.gz 
 $ cd openmpi-4.1.2
 $ mkdir build
 $ cd build
 $ ../configure CC=gcc CXX=g++ F77=gfortran FC=gfortran --prefix=$HOME/local/openmpi-4.1.2
-$ make –j
+$ make -j
 $ make install
 ```
 
-成功後，`~/.bashrc`に以下を追加します．コンパイラ (gcc/g++)がzlibを見つけられるようにします．
-```bash
-export ZLIB_DIR=$HOME/local/zlib-1.3.1
-export CPATH=$ZLIB_DIR/include:$CPATH
-export LIBRARY_PATH=$ZLIB_DIR/lib:$LIBRARY_PATH
-export LD_LIBRARY_PATH=$ZLIB_DIR/lib:$LD_LIBRARY_PATH
-```
-
-terminalに戻って`~/.bashrc`を読み込みます．
-```bash
-source ~/.bashrc
-```
 
 ### zlibのビルド
 zlibをビルドします．zlibはOpenFOAM形式の圧縮ファイルの処理に必要です．
 ``` 
-$ cd ~/Work/Github/
-$ wget https://github.com/madler/zlib/releases/download/v1.3.1/zlib-1.3.1.tar.gz
-$ tar –xvf zlib-1.3.1.tar.gz
+$ cd ~/Work/GitHub/
+$ wget https://GitHub.com/madler/zlib/releases/download/v1.3.1/zlib-1.3.1.tar.gz
+$ tar -xvf zlib-1.3.1.tar.gz
 $ cd zlib-1.3.1
 $ mkdir build
 $ cd build
 $ ../configure --prefix=$HOME/local/zlib-1.3.1
-$ make –j
+$ make -j
 $ make install
-```
-
-成功後，`~/.bashrc`に以下を追加します．コンパイラ (gcc/g++)がzlibを見つけられるようにします．
-```bash
-export ZLIB_DIR=$HOME/local/zlib-1.3.1
-export CPATH=$ZLIB_DIR/include:$CPATH
-export LIBRARY_PATH=$ZLIB_DIR/lib:$LIBRARY_PATH
-export LD_LIBRARY_PATH=$ZLIB_DIR/lib:$LD_LIBRARY_PATH
-```
-
-terminalに戻って`~/.bashrc`を読み込みます．
-``` 
-source ~/.bashrc
 ```
 
 ### flexのビルド
 flexをビルドします．flexはOpenFOAMの設定ファイルを読み込むためのライブラリです．
 ``` 
-$ cd ~/Work/Github 
-$ wget https://github.com/westes/flex/releases/download/v2.6.4/flex-2.6.4.tar.gz 
+$ cd ~/Work/GitHub 
+$ wget https://GitHub.com/westes/flex/releases/download/v2.6.4/flex-2.6.4.tar.gz 
 $ tar -xvf flex-2.6.4.tar.gz 
 $ cd flex-2.6.4 
 $ mkdir build
 $ cd build
 $ ../configure --prefix=$HOME/local/flex-2.6.4
-$ make –j
+$ make -j
 $ make install
 ```
 
@@ -132,10 +140,17 @@ $ ../configure --prefix=$HOME/local/flex-2.6.4 CFLAGS="-D_GNU_SOURCE" ac_cv_func
 ```
 としてください．glibcのバージョンは```ldd --version```で確認可能です．
 
-成功後，`~/.bashrc`に以下を追加します．コンパイラ (gcc/g++)がflexを見つけられるようにします．
+`bison`, `cmake`, `openmpi`, `zlib`，`flex`のビルドが終了したら，`~/.bashrc`に以下を追加します．コンパイラ (gcc/g++)が各ライブラリを見つけられるようにします．
 ```bash
-export PATH=$HOME/local/flex-2.6.4/bin:$PATH
-export CPATH=$HOME/local/flex-2.6.4/include:$CPATH
+export MPI_PATH=$HOME/local/openmpi-4.1.2
+export ZLIB_DIR=$HOME/local/zlib-1.3.1
+
+export PATH=$HOME/local/bison-3.8.2/bin:$HOME/local/cmake-3.27.9/bin:$MPI_PATH/bin:$HOME/local/flex-2.6.4/bin:$PATH
+
+export LD_LIBRARY_PATH=$MPI_PATH/lib:$ZLIB_DIR/lib:$LD_LIBRARY_PATH
+export LIBRARY_PATH=$ZLIB_DIR/lib:$LIBRARY_PATH
+
+export CPATH=$ZLIB_DIR/include:$HOME/local/flex-2.6.4/include:$CPATH
 ```
 
 terminalに戻って`~/.bashrc`を読み込みます．
@@ -143,53 +158,6 @@ terminalに戻って`~/.bashrc`を読み込みます．
 source ~/.bashrc
 ```
 
-### m4のビルド
-OpenFOAM ThirdPartyであるgmpのビルドに必要です．1.4.18, 19で動作確認済みです．Ubuntu 22.04 LTS等の新しい環境では1.4.18以下のバージョンはコンパイル時にエラーが発生するようです．その場合には1.4.19以上のバージョンを使って下さい．terminalで以下のコマンドを入力します．
-``` 
-$ cd ~/Work/Github
-$ wget https://ftp.gnu.org/gnu/m4/m4-1.4.19.tar.gz
-$ tar –xvf m4-1.4.19.tar.gz
-$ cd m4-1.4.19
-$ mkdir build
-$ cd build
-$ ../configure –-prefix=$HOME/local/m4-1.4.19
-$ make –j
-$ make install
-```
-
-成功後，`~/.bashrc`に以下を追加します．
-```bash
-export PATH=$HOME/local/m4-1.4.19/bin:$PATH 
-```
-
-terminalに戻って`~/.bashrc`を読み込みます．
-``` 
-source ~/.bashrc
-```
-
-### bisonのビルド
-bisonをビルドします．bisonは数式をC++ (OpenFOAM) 向けに読み取るライブラリです．
-``` 
-$ cd ~/Work/Github 
-$ wget https://ftp.gnu.org/gnu/bison/bison-3.8.2.tar.gz 
-$ tar -xvf bison-3.8.2.tar.gz
-$ cd bison-3.8.2 
-$ mkdir build
-$ cd build
-$ ../configure –-prefix=$HOME/local/bison-3.8.2 
-$ make -j 
-$ make install
-```
-
-成功後，`~/.bashrc`に以下を追加します．コンパイラ (gcc/g++)がflexを見つけられるようにします．
-```bash
-export PATH=$HOME/local/bison-3.8.2/bin:$PATH 
-```
-
-terminalに戻って`~/.bashrc`を読み込みます．
-```bash
-source ~/.bashrc
-```
 
 ## OpenFOAMの準備
 - ESI版のv2412を使用します．
@@ -197,11 +165,11 @@ https://www.openfoam.com/download/release-history
 からダウンロードできます．
 
 ``` 
-$ cd ~/Work/Github
+$ cd ~/Work/GitHub
 $ wget https://dl.openfoam.com/source/v2412/OpenFOAM-v2412.tgz
-$ tar –xvf OpenFOAM-v2412.tgz
+$ tar -xvf OpenFOAM-v2412.tgz
 $ wget https://dl.openfoam.com/source/v2412/ThirdParty-v2412.tgz
-$ tar –xvf ThirdParty-v2412.tgz
+$ tar -xvf ThirdParty-v2412.tgz
 ```
 
 (参考：https://qiita.com/yotakagi77/items/17006fd0dedef3acc573)
@@ -209,25 +177,24 @@ $ tar –xvf ThirdParty-v2412.tgz
 ### OpenFOAM ThirdPartyのビルド
 まずOpenFOAM-v2412のビルドに必要なライブラリをThirdPartyを用いてビルドします．
 ``` 
-$ cd ~/Work/Github/ThirdParty-v2412
+$ cd ~/Work/GitHub/ThirdParty-v2412
 ```
 
 gmp，mpfr, mpc, cmake, qtをダウンロードします．
 ``` 
 $ wget https://ftp.gnu.org/gnu/gmp/gmp-6.2.0.tar.xz
-$ tar –xvf gmp-6.2.0.tar.xz
+$ tar -xvf gmp-6.2.0.tar.xz
 $ wget https://ftp.gnu.org/gnu/mpfr/mpfr-4.0.2.tar.xz
-$ tar –xvf mpfr-4.0.2.tar.xz
+$ tar -xvf mpfr-4.0.2.tar.xz
 $ wget https://ftp.gnu.org/gnu/mpc/mpc-1.1.0.tar.gz
-$ tar –xvf mpc-1.1.0.tar.gz 
+$ tar -xvf mpc-1.1.0.tar.gz 
 $ wget https://download.qt.io/archive/qt/5.12/5.12.11/single/qt-everywhere-src-5.12.11.tar.xz
 $ tar -xvf qt-everywhere-src-5.12.11.tar.xz
 $ mv qt-everywhere-src-5.12.11 qt-everywhere-opensource-src-5.12.11 
 ```
 
-`../OpenFOAM-v2412/etc/config.sh/compiler`を以下のように書き換えます．
+`../OpenFOAM-v2412/etc/config.sh/compiler`を以下のように書き換えます．`gcc`のバージョンはterminalで`gcc --version`で確認して下さい．
 ```bash
-61: default_clang_version=llvm-15.0.7
 62: default_gcc_version=gcc-10.5.0
 ...
 64: default_gmp_version=gmp-6.2.0
@@ -237,14 +204,23 @@ $ mv qt-everywhere-src-5.12.11 qt-everywhere-opensource-src-5.12.11
 
 OpenFOAMの`bashrc`を読み込みます．
 ``` 
-$. ~/Work/Github/OpenFOAM-v2412/etc/bashrc
+$. ~/Work/GitHub/OpenFOAM-v2412/etc/bashrc
 ```
-### 必要なライブラリのビルド
-CGALのビルドを行います．CGALはsnappyhexMeshなど，解析をするためのメッシュ切りの際に必要です．
-可視化にはそれほど重要では有りませんので，必要がなければ飛ばしてOKです．
+この時点ではまだコンパイルしていないので，警告が表示されますが無視してOKです．
+
+### ThridParty内の必要なライブラリのビルド
+ここでは以下のライブラリをビルドします．
+- gmp
+- mpfr
+- CGAL
+
+これらは依存関係があります．必ず`gmp`→`mpfr`→`CGAL`の順番にビルドして下さい．
+
+※CGALはsnappyhexMeshなど，解析をするためのメッシュ切りの際に必要です．可視化には関係ないので，必要がなければ飛ばしてOKです．
+
 まずgmpのビルドを行います．
 ``` 
-$ cd ~/Work/Github/ThirdParty-v2412/gmp-6.2.0
+$ cd ~/Work/GitHub/ThirdParty-v2412/gmp-6.2.0
 $ mkdir build
 $ cd build
 $ ../configure --prefix=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH/gmp-6.2.0 --enable-cxx --with-pic 
@@ -254,7 +230,7 @@ $ make install
 
 次にmpfrのビルドを行います．先ほどビルドしたgmpを使用します．
 ``` 
-$ cd ~/Work/Github/ThirdParty-v2412/mpfr-4.0.2
+$ cd ~/Work/GitHub/ThirdParty-v2412/mpfr-4.0.2
 $ mkdir build
 $ cd build
 $ ../configure --prefix=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH/mpfr-4.0.2 --with-gmp=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH/gmp-6.2.0 --with-pic 
@@ -264,7 +240,7 @@ $ make install
 
 最後にCGALのビルドを行います．gmpとmpfrを用いてビルドをします．
 ``` 
-$ cd ~/Work/Github/ThirdParty-v2412
+$ cd ~/Work/GitHub/ThirdParty-v2412
 $ ./makeCGAL CGAL-4.14.3 gmp-6.2.0 mpfr-4.0.2
 ```
 
@@ -278,8 +254,8 @@ $ ./makeCGAL CGAL-4.14.3 gmp-6.2.0 mpfr-4.0.2
 
 OpenFOAMの`bashrc`を読み込みます．
 ``` 
-$ cd ~/Work/Github/ThirdParty-v2412
-$. ~/Work/Github/OpenFOAM-v2412/etc/bashrc
+$ cd ~/Work/GitHub/ThirdParty-v2412
+$. ~/Work/GitHub/OpenFOAM-v2412/etc/bashrc
 ```
 その後ビルドをします．
 ``` 
@@ -311,7 +287,7 @@ Can continue to OpenFOAM installation
 ## OpenFOAM本体のビルド
 再度OpenFOAMのbashrcを読み込みます．
 ``` 
-$ cd ~/Work/Github/OpenFOAM-v2412
+$ cd ~/Work/GitHub/OpenFOAM-v2412
 $ . ./etc/bashrc
 ```
 ビルドを開始します．
@@ -335,8 +311,10 @@ $ ./Allwmake -j
 
 最後に`~/.bashrc`に以下を追加します
 ```bash
-. $HOME/Work/Github/OpenFOAM-v2412/etc/bashrc
+. $HOME/Work/GitHub/OpenFOAM-v2412/etc/bashrc
+export FOAM_SIGFPE=false
 ```
+
 terminalに戻って~/.bashrcを読み込みます．
 ``` 
 $ source ~/.bashrc

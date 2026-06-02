@@ -1,11 +1,5 @@
 # KVSのビルド
-基本的には[KVS](https://github.com/naohisas/KVS)を参照してください．
-
-## ビルドするライブラリについて
-本ドキュメントはOpenFOAM v2412でin-situ可視化をするための準備として記述しています．以下の順番で各ライブラリをビルドします．依存関係は....
-
-coming soon...
-
+基本的には[KVS](https://github.com/naohisas/KVS)を参照してください．本ドキュメントはOpenFOAM v2412でin-situ可視化をするための準備として記述しています．
 
 ## KVSの入手
 KVSを入手します．
@@ -82,45 +76,52 @@ $ make
 $ make install
 ```
 エラーが出なければビルド成功です．
+### 動作確認
+以下のコマンドで動作確認が可能です．
+```
+$ cd ~/Work/GitHub/KVS/Example/SupportEGL/Hello
+$ kvsmake -G
+$ kvsmake
+```
+これにより`output_0??.bmp`が11枚出力されます．
 
 ## OSMesa版のKVSのビルド
+ここでは
+- ninja
+- llvm
+- osmesa
+をビルドします．必ず`ninja`→`llvm`→`osmesa`の順番にビルドして下さい．
 
 ### ninjaの準備
-llvmをビルドするのに必要です．terminalで以下の通り入力します．最終的にcmakeのライブラリに格納します．
+`llvm`をビルドするのに必要です．terminalで以下の通り入力します．最終的にcmakeのライブラリに格納します．
 ``` 
-$ cd ~/Work/Github
+$ cd ~/Work/GitHub
 $ git clone https://github.com/ninja-build/ninja.git
 $ cd ninja
-$ python3 configure.py –-bootstrap
+$ python3 configure.py --bootstrap
 $ cp ninja $HOME/local/cmake-3.27.9/bin
 ```
 
 ### llvmのビルド
-OSMesaを使用する際に，llvmpipeを使って高速可視化を実現します．15.0.7で動作確認済みです．
+`OSMesa`を使用する際に，`llvmpipe`を使って高速可視化を実現します．15.0.7で動作確認済みです．
 terminalで以下のコマンドを入力します．
 ``` 
-$ cd ~/Work/Github
+$ cd ~/Work/GitHub
 $ git clone https://github.com/llvm/llvm-project.git
 $ cd llvm-project
 $ git checkout llvmorg-15.0.7
 ```
 さらに
-``` 
-$ cmake -G Ninja -DCMAKE_INSTALL_PREFIX=$HOME/local/llvm-15.0.7 \  
--DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_RTTI=ON \  
--DLLVM_BUILD_LLVM_DYLIB=ON -DLLVM_LINK_LLVM_DYLIB=ON \  
--DLLVM_TARGETS_TO_BUILD="X86" \
-../llvm
 ```
-を実行します．なお`-DLLVM_TARGETS_TO_BUILD="X86"`の部分については，各自の環境に合わせた設定が必要です．terminalで
-``` 
-uname -m
+$ mkdir build
+$ cd build
+$ CC=gcc CXX=g++ cmake -G Ninja -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_INSTALL_PREFIX=$HOME/local/llvm-15.0.7 -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_RTTI=ON -DLLVM_BUILD_LLVM_DYLIB=ON -DLLVM_LINK_LLVM_DYLIB=ON -DLLVM_TARGETS_TO_BUILD="X86" ../llvm
 ```
-のコマンドで確認して下さい．
+を実行します．
 
 cmakeが無事に終了した後
 ``` 
-$ ninja -j
+$ ninja
 $ ninja install
 ```
 正常に終了後，`~/.bashrc`に以下の内容を追加しておきます．
@@ -135,9 +136,9 @@ $ source ~/.bashrc
 ```
 
 ### OSMesaのビルド
-OSMesa 22.3.7で動作確認済みです．これをビルドするためにはmeson, ninja, makoが必要です．
+OSMesa 22.3.7で動作確認済みです．これをビルドするためには`meson`, `ninja`, `mako`が必要です．
 ``` 
-$ pip3 install –user meson ninja mako
+$ pip3 install --user meson ninja mako --break-system-packages
 ```
 これらのライブラリが`$HOME/.local`に入るので，`~/.bashrc`にパスを通します．
 ```bash
@@ -145,14 +146,14 @@ export PATH=$HOME/.local/bin:$PATH
 ```
 再びterminalでOSMesaを取得します．
 ``` 
-$ cd ~/Work/Github
+$ cd ~/Work/GitHub
 $ wget https://archive.mesa3d.org/older-versions/22.x/mesa-22.3.7.tar.xz
-$ tar –xvf mesa-22.3.7.tar.xz
+$ tar -xvf mesa-22.3.7.tar.xz
 $ cd mesa-22.3.7
 ```
 以下のコマンドでビルドします．
 ``` 
-$ meson setup build \
+$ CC=gcc CXX=g++ meson setup build \
   --prefix=$HOME/local/osmesa_22.3.7 \
   --buildtype=release \
   -Dosmesa=true \
@@ -165,17 +166,21 @@ $ meson setup build \
   -Dgbm=disabled \
   -Dshared-glapi=enabled \
   -Dllvm=enabled
-$ ninja –C build
-$ ninja –C build install
+$ ninja -C build
+$ ninja -C build install
 ```
 KVSでOSMesaを使用するため，以下を`~/.bashrc`に追加します．
 ```bash
 export LLVM_CONFIG=$LLVM_PATH/bin/llvm-config
 export KVS_OSMESA_DIR=$HOME/local/osmesa_22.3.7
-export KVS_OSMESA_LINK_LIBRARY=“-lOSMesa –lz $($LLVM_CONFIG --ldflags) \
-$($LLVM_CONFIG --libs all) $($LLVM_CONFIG --system-libs) –lrt –ldl –lpthread –lm”
-export LD_LIBRARY_PATH=$HOME/local/osmesa_22.3.7/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$KVS_OSMESA_DIR/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
+export KVS_OSMESA_LINK_LIBRARY="-lOSMesa -lglapi -lz $($LLVM_CONFIG --ldflags) $($LLVM_CONFIG --libs all) $($LLVM_CONFIG --system-libs) -lrt -ldl -lpthread -lm"
 ```
+ターミナルに戻り環境変数を反映します．
+```
+$ source ~/.bashrc
+```
+
 ### OSMesa版のKVSのビルド
 KVSディレクトリに移動します．
 ``` 
@@ -208,23 +213,24 @@ $ make install
 ```
 エラーが出なければビルド成功です．
 
-## 動作確認
+### 動作確認
+以下のコマンドで動作確認が可能です．
+```
+$ cd ~/Work/GitHub/KVS/Example/SupportOSMesa/Hello
+$ kvsmake -G
+$ kvsmake
+```
+これにより`output_0??.bmp`が11枚出力されます．
 
 
 # InSituVisの準備
 InSituVisのライブラリを準備してビルドします．
 ``` 
-$ cd ~/Work/Github
+$ cd ~/Work/GitHub
 $ git clone https://github.com/vizlab-kobe/InSituVis.git
 $ cd InSituVis/Lib
 $ python3 kvsmake.py
 ```
-`~/Work/Github/InSituVis/LibにlibInSituVis.a`が生成されていればOKです．
+`~/Work/GitHub/InSituVis/Lib`に`libInSituVis.a`が生成されていればOKです．
 
-# 動作確認
 
-## OpenFOAMv2412を用いたOralAirFlowVisの可視化
-coming soon..
-
-## OpenFOAMのtutorialの可視化
-coming soon..
