@@ -38,12 +38,12 @@ llvm，およびOpenFOAMをビルドするのに必要です．3.27.9で動作�
 ``` 
 $ cd ~/Work/Github
 $ wget https://github.com/Kitware/CMake/releases/download/v3.27.9/cmake-3.27.9.tar.gz
-$ tar –xvf cmake-3.27.9.tar.gz
+$ tar -xvf cmake-3.27.9.tar.gz
 $ cd cmake-3.27.9
 $ mkdir build
 $ cd build
-$ ../bootstrap -–prefix=$HOME/local/cmake-3.27.9
-$ make –j
+$ ../bootstrap --prefix=$HOME/local/cmake-3.27.9
+$ make -j
 $ make install
 ```
 
@@ -69,7 +69,7 @@ $ cd openmpi-4.1.2
 $ mkdir build
 $ cd build
 $ ../configure CC=gcc CXX=g++ F77=gfortran FC=gfortran --prefix=$HOME/local/openmpi-4.1.2
-$ make –j
+$ make -j
 $ make install
 ```
 
@@ -90,12 +90,12 @@ zlibをビルドします．zlibはOpenFOAM形式の圧縮ファイルの処理�
 ``` 
 $ cd ~/Work/Github/
 $ wget https://github.com/madler/zlib/releases/download/v1.3.1/zlib-1.3.1.tar.gz
-$ tar –xvf zlib-1.3.1.tar.gz
+$ tar -xvf zlib-1.3.1.tar.gz
 $ cd zlib-1.3.1
 $ mkdir build
 $ cd build
 $ ../configure --prefix=$HOME/local/zlib-1.3.1
-$ make –j
+$ make -j
 $ make install
 ```
 
@@ -122,7 +122,7 @@ $ cd flex-2.6.4
 $ mkdir build
 $ cd build
 $ ../configure --prefix=$HOME/local/flex-2.6.4
-$ make –j
+$ make -j
 $ make install
 ```
 
@@ -148,12 +148,12 @@ OpenFOAM ThirdPartyであるgmpのビルドに必要です．1.4.18, 19で動作
 ``` 
 $ cd ~/Work/Github
 $ wget https://ftp.gnu.org/gnu/m4/m4-1.4.19.tar.gz
-$ tar –xvf m4-1.4.19.tar.gz
+$ tar -xvf m4-1.4.19.tar.gz
 $ cd m4-1.4.19
 $ mkdir build
 $ cd build
 $ ../configure --prefix=$HOME/local/m4-1.4.19
-$ make –j
+$ make -j
 $ make install
 ```
 
@@ -176,7 +176,7 @@ $ tar -xvf bison-3.8.2.tar.gz
 $ cd bison-3.8.2 
 $ mkdir build
 $ cd build
-$ ../configure –-prefix=$HOME/local/bison-3.8.2 
+$ ../configure --prefix=$HOME/local/bison-3.8.2 
 $ make -j 
 $ make install
 ```
@@ -199,9 +199,9 @@ https://www.openfoam.com/download/release-history
 ``` 
 $ cd ~/Work/Github
 $ wget https://dl.openfoam.com/source/v2412/OpenFOAM-v2412.tgz
-$ tar –xvf OpenFOAM-v2412.tgz
+$ tar -xvf OpenFOAM-v2412.tgz
 $ wget https://dl.openfoam.com/source/v2412/ThirdParty-v2412.tgz
-$ tar –xvf ThirdParty-v2412.tgz
+$ tar -xvf ThirdParty-v2412.tgz
 ```
 
 (参考：https://qiita.com/yotakagi77/items/17006fd0dedef3acc573)
@@ -215,11 +215,11 @@ $ cd ~/Work/Github/ThirdParty-v2412
 gmp，mpfr, mpc, cmake, qtをダウンロードします．
 ``` 
 $ wget https://ftp.gnu.org/gnu/gmp/gmp-6.2.0.tar.xz
-$ tar –xvf gmp-6.2.0.tar.xz
+$ tar -xvf gmp-6.2.0.tar.xz
 $ wget https://ftp.gnu.org/gnu/mpfr/mpfr-4.0.2.tar.xz
-$ tar –xvf mpfr-4.0.2.tar.xz
+$ tar -xvf mpfr-4.0.2.tar.xz
 $ wget https://ftp.gnu.org/gnu/mpc/mpc-1.1.0.tar.gz
-$ tar –xvf mpc-1.1.0.tar.gz 
+$ tar -xvf mpc-1.1.0.tar.gz 
 $ wget https://download.qt.io/archive/qt/5.12/5.12.11/single/qt-everywhere-src-5.12.11.tar.xz
 $ tar -xvf qt-everywhere-src-5.12.11.tar.xz
 $ mv qt-everywhere-src-5.12.11 qt-everywhere-opensource-src-5.12.11 
