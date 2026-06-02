@@ -29,12 +29,4 @@ $ wclean && wmake
 $ cd ~/Work/GitHub/OpenFOAMVis/motorBike/vis_motorBike
 $ mpirun np 8 motorBike_pisoFoam -parallel
 ```
-として実行します．環境にも依りますが，計算に非常に長い時間がかかりますので，
-```
-$ nohup mpirun -np 8 motorBike_pisoFoam -parallel 2>&1 log.dat &
-```
-として
-```
-$ tail -f log.dat
-```
-で監視しても良いです．`Output`ディレクトリに`*.bmp`ファイルが出力されればOKです．
+として実行します．`Output`ディレクトリに`*.bmp`ファイルが出力されればOKです．
