@@ -173,7 +173,8 @@ KVSでOSMesaを使用するため，以下を`~/.bashrc`に追加します．
 ```bash
 export LLVM_CONFIG=$LLVM_PATH/bin/llvm-config
 export KVS_OSMESA_DIR=$HOME/local/osmesa_22.3.7
-export KVS_OSMESA_LINK_LIBRARY="-lOSMesa -lz $($LLVM_CONFIG --ldflags) $($LLVM_CONFIG --libs all) $($LLVM_CONFIG --system-libs) -lrt -ldl -lpthread -lm"
+export LD_LIBRARY_PATH=$KVS_OSMESA_DIR/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
+export KVS_OSMESA_LINK_LIBRARY="-lOSMesa -lglapi -lz $($LLVM_CONFIG --ldflags) $($LLVM_CONFIG --libs all) $($LLVM_CONFIG --system-libs) -lrt -ldl -lpthread -lm"
 ```
 ターミナルに戻り環境変数を反映します．
 ```
