@@ -312,7 +312,9 @@ $ ./Allwmake -j
 最後に`~/.bashrc`に以下を追加します
 ```bash
 . $HOME/Work/GitHub/OpenFOAM-v2412/etc/bashrc
+export FOAM_SIGFPE=false
 ```
+
 terminalに戻って~/.bashrcを読み込みます．
 ``` 
 $ source ~/.bashrc
