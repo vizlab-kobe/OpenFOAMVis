@@ -73,12 +73,11 @@ $ make –j
 $ make install
 ```
 
-成功後，`~/.bashrc`に以下を追加します．コンパイラ (gcc/g++)がzlibを見つけられるようにします．
+成功後，`~/.bashrc`に以下を追加します．コンパイラ (gcc/g++)がopenmpiを見つけられるようにします．
 ```bash
-export ZLIB_DIR=$HOME/local/zlib-1.3.1
-export CPATH=$ZLIB_DIR/include:$CPATH
-export LIBRARY_PATH=$ZLIB_DIR/lib:$LIBRARY_PATH
-export LD_LIBRARY_PATH=$ZLIB_DIR/lib:$LD_LIBRARY_PATH
+export MPI_PATH=$HOME/local/openmpi-4.1.2
+export PATH=$MPI_PATH/bin:$PATH
+export LD_LIBRARY_PATH=$MPI_PATH/lib:$LD_LIBRARY_PATH
 ```
 
 terminalに戻って`~/.bashrc`を読み込みます．
