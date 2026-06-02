@@ -102,7 +102,7 @@ llvmをビルドするのに必要です．terminalで以下の通り入力し�
 $ cd ~/Work/GitHub
 $ git clone https://github.com/ninja-build/ninja.git
 $ cd ninja
-$ python3 configure.py –-bootstrap
+$ python3 configure.py --bootstrap
 $ cp ninja $HOME/local/cmake-3.27.9/bin
 ```
 
@@ -142,7 +142,7 @@ $ source ~/.bashrc
 ### OSMesaのビルド
 OSMesa 22.3.7で動作確認済みです．これをビルドするためにはmeson, ninja, makoが必要です．
 ``` 
-$ pip3 install –user meson ninja mako --break-system-packages
+$ pip3 install --user meson ninja mako --break-system-packages
 ```
 これらのライブラリが`$HOME/.local`に入るので，`~/.bashrc`にパスを通します．
 ```bash
@@ -152,7 +152,7 @@ export PATH=$HOME/.local/bin:$PATH
 ``` 
 $ cd ~/Work/GitHub
 $ wget https://archive.mesa3d.org/older-versions/22.x/mesa-22.3.7.tar.xz
-$ tar –xvf mesa-22.3.7.tar.xz
+$ tar -xvf mesa-22.3.7.tar.xz
 $ cd mesa-22.3.7
 ```
 以下のコマンドでビルドします．
@@ -170,14 +170,14 @@ $ CC=gcc CXX=g++ meson setup build \
   -Dgbm=disabled \
   -Dshared-glapi=enabled \
   -Dllvm=enabled
-$ ninja –C build
-$ ninja –C build install
+$ ninja -C build
+$ ninja -C build install
 ```
 KVSでOSMesaを使用するため，以下を`~/.bashrc`に追加します．
 ```bash
 export LLVM_CONFIG=$LLVM_PATH/bin/llvm-config
 export KVS_OSMESA_DIR=$HOME/local/osmesa_22.3.7
-export KVS_OSMESA_LINK_LIBRARY=“-lOSMesa –lz $($LLVM_CONFIG --ldflags) $($LLVM_CONFIG --libs all) $($LLVM_CONFIG --system-libs) –lrt –ldl –lpthread –lm”
+export KVS_OSMESA_LINK_LIBRARY="-lOSMesa -lz $($LLVM_CONFIG --ldflags) $($LLVM_CONFIG --libs all) $($LLVM_CONFIG --system-libs) -lrt -ldl -lpthread -lm"
 ```
 ターミナルに戻り環境変数を反映します．
 ```
