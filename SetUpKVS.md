@@ -136,6 +136,11 @@ terminalに戻り`~/.bashrc`を読み込みます．
 ``` 
 $ source ~/.bashrc
 ```
+確認として，
+```
+$ llvm-conifg --version
+```
+と入力した際に`15.0.7`と出ればOKです．
 
 ### OSMesaのビルド
 OSMesa 22.3.7で動作確認済みです．これをビルドするためには`meson`, `ninja`, `mako`が必要です．次のコマンドで取得可能です：
@@ -182,6 +187,13 @@ export KVS_OSMESA_LINK_LIBRARY="-lOSMesa -lglapi -lz $($LLVM_CONFIG --ldflags) $
 ```
 $ source ~/.bashrc
 ```
+
+確認
+```
+$ ls $HOME/local/osmesa_22.3.7/lib/x86_64-linux-gnu
+```
+を実行すると，生成されたライブラリを確認できます．
+
 
 ### OSMesa版のKVSのビルド
 KVSディレクトリに移動します．
