@@ -193,7 +193,7 @@ $ tar -xvf qt-everywhere-src-5.12.11.tar.xz
 $ mv qt-everywhere-src-5.12.11 qt-everywhere-opensource-src-5.12.11 
 ```
 
-`../OpenFOAM-v2412/etc/config.sh/compiler`を以下のように書き換えます．
+`../OpenFOAM-v2412/etc/config.sh/compiler`を以下のように書き換えます．`gcc`の場ジョンはterminalで`gcc --version`で確認して下さい．
 ```bash
 62: default_gcc_version=gcc-10.5.0
 ...
