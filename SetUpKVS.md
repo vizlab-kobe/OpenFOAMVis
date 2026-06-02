@@ -1,11 +1,5 @@
 # KVSのビルド
-基本的には[KVS](https://github.com/naohisas/KVS)を参照してください．
-
-## ビルドするライブラリについて
-本ドキュメントはOpenFOAM v2412でin-situ可視化をするための準備として記述しています．以下の順番で各ライブラリをビルドします．依存関係は....
-
-coming soon...
-
+基本的には[KVS](https://github.com/naohisas/KVS)を参照してください．本ドキュメントはOpenFOAM v2412でin-situ可視化をするための準備として記述しています．
 
 ## KVSの入手
 KVSを入手します．
@@ -83,21 +77,23 @@ $ make install
 ```
 エラーが出なければビルド成功です．
 ### 動作確認
-coming soon...
+以下のコマンドで動作確認が可能です．
+```
+$ cd ~/Work/GitHub/KVS/Example/SupportEGL/Hello
+$ kvsmake -G
+$ kvsmake
+```
+これにより`output_0??.bmp`が11枚出力されます．
 
 ## OSMesa版のKVSのビルド
-
-### gccの注意
-gccを独自にビルドした環境において，condaなどの他のライブラリも共存している場合`~/.bashrc`において
-```
-export PATH="$HOME/local/gcc-11.4.0/bin:$PATH"
-export LD_LIBRARY_PATH="$HOME/local/gcc-11.4.0/lib64:$HOME/local/gcc-11.4.0/lib:$LD_LIBRARY_PATH"
-```
-は最下部に記述します．
-
+ここでは
+- ninja
+- llvm
+- osmesa
+をビルドします．必ず`ninja`→`llvm`→`osmesa`の順番にビルドして下さい．
 
 ### ninjaの準備
-llvmをビルドするのに必要です．terminalで以下の通り入力します．最終的にcmakeのライブラリに格納します．
+`llvm`をビルドするのに必要です．terminalで以下の通り入力します．最終的にcmakeのライブラリに格納します．
 ``` 
 $ cd ~/Work/GitHub
 $ git clone https://github.com/ninja-build/ninja.git
@@ -107,7 +103,7 @@ $ cp ninja $HOME/local/cmake-3.27.9/bin
 ```
 
 ### llvmのビルド
-OSMesaを使用する際に，llvmpipeを使って高速可視化を実現します．15.0.7で動作確認済みです．
+`OSMesa`を使用する際に，`llvmpipe`を使って高速可視化を実現します．15.0.7で動作確認済みです．
 terminalで以下のコマンドを入力します．
 ``` 
 $ cd ~/Work/GitHub
@@ -140,7 +136,7 @@ $ source ~/.bashrc
 ```
 
 ### OSMesaのビルド
-OSMesa 22.3.7で動作確認済みです．これをビルドするためにはmeson, ninja, makoが必要です．
+OSMesa 22.3.7で動作確認済みです．これをビルドするためには`meson`, `ninja`, `mako`が必要です．
 ``` 
 $ pip3 install --user meson ninja mako --break-system-packages
 ```
@@ -217,6 +213,13 @@ $ make install
 エラーが出なければビルド成功です．
 
 ### 動作確認
+以下のコマンドで動作確認が可能です．
+```
+$ cd ~/Work/GitHub/KVS/Example/SupportOSMesa/Hello
+$ kvsmake -G
+$ kvsmake
+```
+これにより`output_0??.bmp`が11枚出力されます．
 
 
 # InSituVisの準備
