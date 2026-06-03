@@ -238,13 +238,10 @@ $ kvsmake
 
 
 # InSituVisの準備
-InSituVisのライブラリを準備してビルドします．
+InSituVisのライブラリを準備します．
 ``` 
 $ cd ~/Work/GitHub
 $ git clone https://github.com/vizlab-kobe/InSituVis.git
-$ cd InSituVis/Lib
-$ python3 kvsmake.py
 ```
-`~/Work/GitHub/InSituVis/Lib`に`libInSituVis.a`が生成されていればOKです．
-
+こちらはビルド等の操作は必要ありません．
 
