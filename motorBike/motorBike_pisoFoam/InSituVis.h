@@ -129,7 +129,7 @@ public:
     InSituVis( const MPI_Comm world = MPI_COMM_WORLD, const int root = 0 ): BaseClass( world, root )
     {
 
-      this->setOutputFilename("propeller");
+      this->setOutputFilename("motorBike");
       
         // Common parameters.
         this->setImageSize( Params::ImageSize.x(), Params::ImageSize.y() );
