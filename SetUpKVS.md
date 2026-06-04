@@ -92,16 +92,21 @@ $ kvsmake
 - osmesa
 をビルドします．
 
-これらは依存関係があります．必ず`ninja`→`llvm`→`osmesa`の順番にビルドして下さい．
+これらは依存関係があります．必ず`ninja`→`llvm`→`osmesa`の順番で実施して下さい．
 
-### ninjaの準備
-`llvm`をビルドするのに必要です．terminalで以下の通り入力します．最終的にcmakeのライブラリに格納します．
+まずは`ninja`を取得します．あとで必要になるので，ついでに`meson`, `mako`も取得します．次のコマンドで取得可能です：
 ``` 
-$ cd ~/Work/GitHub
-$ git clone https://github.com/ninja-build/ninja.git
-$ cd ninja
-$ python3 configure.py --bootstrap
-$ cp ninja $HOME/local/cmake-3.27.9/bin
+$ pip3 install --user meson ninja mako --break-system-packages
+```
+Ubuntu18.04など，すこし古いLinuxの場合には
+```
+$ pip3 install --user meson ninja mako
+```
+でOKです．
+
+これらのライブラリが`$HOME/.local`に入るので，`~/.bashrc`にパスを通します．
+```bash
+export PATH=$HOME/.local/bin:$PATH
 ```
 
 ### llvmのビルド
@@ -143,15 +148,9 @@ $ llvm-conifg --version
 と入力した際に`15.0.7`と出ればOKです．
 
 ### OSMesaのビルド
-OSMesa 22.3.7で動作確認済みです．これをビルドするためには`meson`, `ninja`, `mako`が必要です．次のコマンドで取得可能です：
-``` 
-$ pip3 install --user meson ninja mako --break-system-packages
-```
-これらのライブラリが`$HOME/.local`に入るので，`~/.bashrc`にパスを通します．
-```bash
-export PATH=$HOME/.local/bin:$PATH
-```
-再びterminalでOSMesaを取得します．
+OSMesa 22.3.7で動作確認済みです．
+
+terminalでOSMesaを取得します．
 ``` 
 $ cd ~/Work/GitHub
 $ wget https://archive.mesa3d.org/older-versions/22.x/mesa-22.3.7.tar.xz
