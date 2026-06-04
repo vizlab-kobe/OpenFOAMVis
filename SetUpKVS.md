@@ -147,7 +147,7 @@ $ source ~/.bashrc
 ```
 確認として，
 ```
-$ llvm-conifg --version
+$ llvm-config --version
 ```
 と入力した際に`15.0.7`と出ればOKです．
 
