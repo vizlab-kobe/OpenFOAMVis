@@ -19,7 +19,7 @@ $ wclean && wmake
 OSMesa版をビルドしたい場合には
 ```
 $ cd OpenFOAMVis/propeller/propeller_pimpleFoam
-$ cp Make/option_osmesa Make/option
+$ cp Make/options_osmesa Make/options
 $ wclean && wmake
 ```
 として下さい．以上の操作でin-situ可視化に対応したpropeller解析用の非定常非圧縮ソルバー`propeller_pimpleFoam`がビルドされます．
@@ -28,7 +28,7 @@ $ wclean && wmake
 ```
 $ cd ~/Work/GitHub/OpenFOAMVis/propeller/vis_propeller
 $ decomposePar
-$ mpirun np 4 propeller_pimpleFoam -parallel
+$ mpirun -np 4 propeller_pimpleFoam -parallel
 ```
 として実行します．
 
