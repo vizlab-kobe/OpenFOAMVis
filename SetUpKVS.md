@@ -13,7 +13,7 @@ export KVS_DIR=$HOME/local/kvs
 export PATH=$KVS_DIR/bin:$PATH
 unset DISPLAY
 ```
-terminalに戻って~/.bashrcを読み込みます．
+terminalに戻って`~/.bashrc`を読み込みます．
 ``` 
 $ source ~/.bashrc
 ```
@@ -90,10 +90,11 @@ $ kvsmake
 - ninja
 - llvm
 - osmesa
-をビルドします．
+を用意します．
 
 これらは依存関係があります．必ず`ninja`→`llvm`→`osmesa`の順番で実施して下さい．
 
+### ninjaの取得
 まずは`ninja`を取得します．あとで必要になるので，ついでに`meson`, `mako`も取得します．次のコマンドで取得可能です：
 ``` 
 $ pip3 install --user meson ninja mako --break-system-packages
@@ -237,7 +238,7 @@ $ cd ~/Work/GitHub/KVS/Example/SupportOSMesa/Hello
 $ kvsmake -G
 $ kvsmake
 ```
-これにより`output_0??.bmp`が11枚出力されます．InSituVisの準備の項へ進んで下さい．
+これにより`output_0??.bmp`が11枚出力されます．描画に問題がないことを確認したら，InSituVisの準備の項へ進んで下さい．
 
 
 # InSituVisの準備
@@ -247,4 +248,3 @@ $ cd ~/Work/GitHub
 $ git clone https://github.com/vizlab-kobe/InSituVis.git
 ```
 こちらはビルド等の操作は必要ありません．
-
