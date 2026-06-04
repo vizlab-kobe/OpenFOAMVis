@@ -108,6 +108,10 @@ $ pip3 install --user meson ninja mako
 ```bash
 export PATH=$HOME/.local/bin:$PATH
 ```
+terminalに戻り反映します．
+```
+$ source ~/.bashrc
+```
 
 ### llvmのビルド
 `OSMesa`を使用する際に，`llvmpipe`を使って高速可視化を実現します．15.0.7で動作確認済みです．
