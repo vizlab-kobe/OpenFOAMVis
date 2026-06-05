@@ -551,13 +551,10 @@ $ mpirun -np 4 propeller_pimpleFoam -parallel
 ```
 環境にも依りますが，計算に非常に長い時間がかかりますので，
 ```
-$ nohup mpirun -np 4 propeller_pimpleFoam -parallel 2>&1 log.dat &
+$ nohup mpirun -np 4 propeller_pimpleFoam -parallel > log.dat 2>&1 &
 ```
 として
 ```
 $ tail -f log.dat
 ```
 で監視しても良いです．
-
-### 結果例
-<img width="512" height="512" alt="propeller_iso" src="https://GitHub.com/user-attachments/assets/e39b5150-08e7-430c-a5ed-91b8c3478fa3" />
