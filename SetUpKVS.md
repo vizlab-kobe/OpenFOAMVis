@@ -13,7 +13,7 @@ export KVS_DIR=$HOME/local/kvs
 export PATH=$KVS_DIR/bin:$PATH
 unset DISPLAY
 ```
-terminalに戻って~/.bashrcを読み込みます．
+terminalに戻って`~/.bashrc`を読み込みます．
 ``` 
 $ source ~/.bashrc
 ```
@@ -90,18 +90,28 @@ $ kvsmake
 - ninja
 - llvm
 - osmesa
-をビルドします．
+を用意します．
 
-これらは依存関係があります．必ず`ninja`→`llvm`→`osmesa`の順番にビルドして下さい．
+これらは依存関係があります．必ず`ninja`→`llvm`→`osmesa`の順番で実施して下さい．
 
-### ninjaの準備
-`llvm`をビルドするのに必要です．terminalで以下の通り入力します．最終的にcmakeのライブラリに格納します．
+### ninjaの取得
+まずは`ninja`を取得します．あとで必要になるので，ついでに`meson`, `mako`も取得します．次のコマンドで取得可能です：
 ``` 
-$ cd ~/Work/GitHub
-$ git clone https://github.com/ninja-build/ninja.git
-$ cd ninja
-$ python3 configure.py --bootstrap
-$ cp ninja $HOME/local/cmake-3.27.9/bin
+$ pip3 install --user meson ninja mako --break-system-packages
+```
+Ubuntu18.04など，すこし古いLinuxの場合には
+```
+$ pip3 install --user meson ninja mako
+```
+でOKです．
+
+これらのライブラリが`$HOME/.local`に入るので，`~/.bashrc`にパスを通します．
+```bash
+export PATH=$HOME/.local/bin:$PATH
+```
+terminalに戻り反映します．
+```
+$ source ~/.bashrc
 ```
 
 ### llvmのビルド
@@ -138,20 +148,14 @@ $ source ~/.bashrc
 ```
 確認として，
 ```
-$ llvm-conifg --version
+$ llvm-config --version
 ```
 と入力した際に`15.0.7`と出ればOKです．
 
 ### OSMesaのビルド
-OSMesa 22.3.7で動作確認済みです．これをビルドするためには`meson`, `ninja`, `mako`が必要です．次のコマンドで取得可能です：
-``` 
-$ pip3 install --user meson ninja mako --break-system-packages
-```
-これらのライブラリが`$HOME/.local`に入るので，`~/.bashrc`にパスを通します．
-```bash
-export PATH=$HOME/.local/bin:$PATH
-```
-再びterminalでOSMesaを取得します．
+OSMesa 22.3.7で動作確認済みです．
+
+terminalでOSMesaを取得します．
 ``` 
 $ cd ~/Work/GitHub
 $ wget https://archive.mesa3d.org/older-versions/22.x/mesa-22.3.7.tar.xz
@@ -234,17 +238,13 @@ $ cd ~/Work/GitHub/KVS/Example/SupportOSMesa/Hello
 $ kvsmake -G
 $ kvsmake
 ```
-これにより`output_0??.bmp`が11枚出力されます．InSituVisの準備の項へ進んで下さい．
+これにより`output_0??.bmp`が11枚出力されます．描画に問題がないことを確認したら，InSituVisの準備の項へ進んで下さい．
 
 
 # InSituVisの準備
-InSituVisのライブラリを準備してビルドします．
+InSituVisのライブラリを準備します．
 ``` 
 $ cd ~/Work/GitHub
 $ git clone https://github.com/vizlab-kobe/InSituVis.git
-$ cd InSituVis/Lib
-$ python3 kvsmake.py
 ```
-`~/Work/GitHub/InSituVis/Lib`に`libInSituVis.a`が生成されていればOKです．
-
-
+こちらはビルド等の操作は必要ありません．

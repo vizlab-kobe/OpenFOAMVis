@@ -148,8 +148,8 @@ EXE_LIBS = \
 +        -L$(KVS_LIB_DIR) -lkvs
 
 +/* InSitu settings */
-+EXE_INC += -I$(HOME)/Work/Github
-+EXE_LIBS += -L$(HOME)/Work/Github/InSituVis/Lib -lInSituVis
++EXE_INC += -I$(HOME)/Work/GitHub
++EXE_LIBS += -L$(HOME)/Work/GitHub/InSituVis/Lib -lInSituVis
 
 +/* OpenMP settings */
 +EXE_INC += -fopenmp
@@ -551,13 +551,10 @@ $ mpirun -np 4 propeller_pimpleFoam -parallel
 ```
 環境にも依りますが，計算に非常に長い時間がかかりますので，
 ```
-$ nohup mpirun -np 4 propeller_pimpleFoam -parallel 2>&1 log.dat &
+$ nohup mpirun -np 4 propeller_pimpleFoam -parallel > log.dat 2>&1 &
 ```
 として
 ```
 $ tail -f log.dat
 ```
 で監視しても良いです．
-
-### 結果例
-<img width="512" height="512" alt="propeller_iso" src="https://github.com/user-attachments/assets/e39b5150-08e7-430c-a5ed-91b8c3478fa3" />
