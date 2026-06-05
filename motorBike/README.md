@@ -1,4 +1,4 @@
-<img width="512" height="512" alt="motorBike_iso" src="https://github.com/user-attachments/assets/c98ae564-1b1b-404c-93cf-728767569108" /># motorBike後流の乱流解析
+# motorBike後流の乱流解析
 
 ここではOpenFOAM v2412のtutorialに含まれるmotorBikeの非定常解析のin-situ可視化を行います．走行中のバイクの後方乱流を表す流速の大きさの等値面を可視化します．
 
