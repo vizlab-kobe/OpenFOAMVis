@@ -35,5 +35,7 @@ $ mpirun -np 4 propeller_pimpleFoam -parallel
 `Output`ディレクトリに`*.bmp`ファイルが出力されればOKです．
 
 
+### 可視化例
+<img width="512" height="512" alt="propeller_iso" src="https://github.com/user-attachments/assets/94e0322d-44f7-4359-babe-60dbd9c0969a" />
 
 
