@@ -190,8 +190,8 @@ int main(int argc, char *argv[])
         const double act_min = gMin(field);
         const double act_max = gMax(field);
 
-        const auto min_value = 4;
-        const auto max_value = 8;
+        const auto min_value = 6;
+        const auto max_value = 15;
 #endif
         // Convert OpenFOAM data to KVS data
         vis.cnvTimer().start();
