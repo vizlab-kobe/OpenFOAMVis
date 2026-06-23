@@ -5,7 +5,7 @@
 KVSを入手します．
 ``` 
 $ cd ~/Work/GitHub
-$ git clone https://github.com/naohisAas/KVS.git
+$ git clone https://github.com/naohisas/KVS.git
 ```
 `~/.bashrc`に以下を追加します．
 ```bash
