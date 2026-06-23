@@ -24,7 +24,7 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         0.7;
+endTime         1.0;
 
 deltaT          1e-4;
 
@@ -47,12 +47,12 @@ timePrecision   6;
 runTimeModifiable true;
 
 
-functions
-{
-    #include "samples"
-    #include "streamLines"
-    #include "forceCoeffs"
-}
+//functions
+//{
+//    #include "samples"
+//    #include "streamLines"
+//    #include "forceCoeffs"
+//}
 
 
 // ************************************************************************* //
