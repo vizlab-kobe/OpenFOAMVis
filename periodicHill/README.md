@@ -35,4 +35,5 @@ $ mpirun -np 16 periodicHill_pimpleFoam -parallel
 
 
 ### 可視化例
-<img width="512" height="512" alt="periodicHill_iso" src="https://github.com/user-attachments/assets/71cf4264-0f22-4304-8164-509759272ca2" />
+<img width="512" height="512" alt="mixerVesselAMI_surface" src="https://github.com/user-attachments/assets/ad4211d9-86f8-4479-892b-0491936a0229" />
+
