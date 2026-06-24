@@ -1,3 +1,5 @@
 ./propeller/*.gif/
 ./motorBike/*.gif/
 ./motorBike/bmp_to_gif.py/
+./bmp_to_gif.py/
+./*/Output/
