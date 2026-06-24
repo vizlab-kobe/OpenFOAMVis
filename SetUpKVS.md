@@ -191,7 +191,7 @@ export KVS_OSMESA_LINK_LIBRARY="-lOSMesa -lglapi -lz $($LLVM_CONFIG --ldflags) $
 ```
 $ source ~/.bashrc
 ```
-なお，使用している環境によっては`$HOME/local/osmesa_22.3.7/lib/x86_64-linux-gnu`ではなく`$HOME/local/osmesa_22.3.7/lib64`にライブラリが生成されます．
+なお，使用している環境によっては`$HOME/local/osmesa_22.3.7/lib/x86_64-linux-gnu`ではなく`$HOME/local/osmesa_22.3.7/lib64`にライブラリが生成されることがあります．
 ```
 $ ls $HOME/local/osmesa_22.3.7/lib/x86_64-linux-gnu
 $ ls $HOME/local/osmesa_22.3.7/lib64
