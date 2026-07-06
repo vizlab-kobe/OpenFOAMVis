@@ -27,6 +27,7 @@ $ wclean && wmake
 さらに解析ディレクトリに移動して解析を実行します．
 ```
 $ cd ~/Work/GitHub/OpenFOAMVis/mixerVesselAMI/vis_mixerVesselAMI
+$ decomposePar
 $ mpirun np 6 mixerVesselAMI_interFoam -parallel
 
 ```
